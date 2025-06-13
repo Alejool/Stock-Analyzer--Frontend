@@ -122,29 +122,14 @@
 import { ref, onMounted } from 'vue'
 import { useCounterStore } from '../stores/counter'
 import { storeToRefs } from 'pinia'
+import { Stock, Metrics } from '../types/dashboard'
 
 const counterStore = useCounterStore();
 const { increment, decrement, double} = counterStore;
 const { count, name, doubledCount} = storeToRefs(counterStore);
 
-interface Stock {
-  ticker: string
-  company: string
-  sector: string
-  rating: 'BUY' | 'HOLD' | 'SELL'
-  score: number
-  targetPrice: number
-  lastUpdate: string
-}
 
-interface Metrics {
-  totalStocks: number
-  buyRecommendations: number
-  totalBrokerages: number
-  lastUpdate: string
-}
 
-// Datos de ejemplo
 const topRecommendation = ref<Stock>({
   ticker: 'AAPL',
   company: 'Apple Inc.',
