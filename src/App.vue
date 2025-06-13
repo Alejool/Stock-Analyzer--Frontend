@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
     <!-- Header -->
-    <header class="bg-gradient-to-r
+    <!-- <header class="bg-gradient-to-r
        from-orange-500 via-orange-600 to-purple-600 
        shadow-lg sticky top-0 z-50
        ">
@@ -41,7 +41,7 @@
           </div>
         </div>
       </nav>
-    </header>
+    </header> -->
      
     <!-- Main Content -->
     <main class="container mx-auto py-6 sm:py-8 px-4 lg:px-6 min-h-[calc(100vh-200px)]">
