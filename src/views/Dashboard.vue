@@ -12,13 +12,14 @@
 
 
           <div class="text-center mb-6">
-            <div class="inline-flex items-center gap-2 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full font-bold mb-4">
-              ⭐ OPORTUNIDAD DESTACADA
+            <div class="inline-flex items-center gap-2 text-xl bg-yellow-400 text-yellow-900 
+              px-4 py-2 rounded-full font-bold mb-4">
+              ⭐ OPORTUNIDAD DEL DÍA
             </div>
             <h2 class="text-5xl font-bold mb-2 text-white/70">{{ topRecommendation.ticker ? topRecommendation.ticker : '-' }}</h2>
             <p class="text-2xl text-white/90">{{ topRecommendation.company ? topRecommendation.company : '-' }}</p>
           </div>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div class="bg-white/10 rounded-xl p-4">
               <div class="text-3xl font-bold text-green-300 mb-1">{{ topRecommendation.score ? `${topRecommendation.score}/100` : '-' }}</div>
@@ -52,9 +53,9 @@
     <div class="container mx-auto px-6 py-12 space-y-12">
 
       <!-- Top 5 Acciones Recomendadas -->
-      <div class="bg-white rounded-2xl shadow-xl p-8">
+      <div class=" rounded-2xl -xl p-8">
         <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold text-gray-800 mb-2">🏆 Top 3 Oportunidades</h2>
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">🏆 Top 3 mejores</h2>
           <p class="text-gray-600">Las mejores inversiones según nuestro algoritmo </p>
         </div>
         
@@ -63,7 +64,50 @@
 
             v-for="(stock, index) in topStocks" 
             :key="stock.ticker"
-            class="relative bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 border-2 border-gray-100 hover:border-orange-300 hover:shadow-lg transition-all duration-300 group"
+            class="relative bg-gradient-to-br from-white to-gray-50 
+            shadow-lg
+            rounded-xl p-6 border-2 border-gray-100 hover:border-orange-300 hover:shadow-lg transition-all duration-300 group"
+          >
+          <CardStock 
+            :stock="stock"
+            :index="index"
+            v-bind="stock"
+          />
+          </div>
+        </div>
+            
+        
+        <!-- Ver Más Button -->
+        <div class="text-center mt-8">
+          <!-- <button class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-full font-bold transition-all duration-200">
+            Ver Todas las Recomendaciones →
+          </button> -->
+
+          <router-link
+              to="/stocks" class="bg-gray-100 hover:bg-gray-200
+                border-2 border-gray-400
+               text-gray-800 px-8 py-3 rounded-full font-bold transition-all duration-200">         
+                   Ver Todas →
+            </router-link>
+        </div>
+    </div>
+      <div class=" rounded-2xl  p-8">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-gray-800 mb-2">🏆 Top 3 peores</h2>
+          <p class="text-gray-600">Las peores inversiones según nuestro algoritmo </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div 
+
+            v-for="(stock, index) in lowStocks" 
+            :key="stock.ticker"
+            class="relative bg-gradient-to-br 
+            from-white to-gray-50 rounded-xl p-6 border-2
+             border-gray-100 hover:border-orange-300 hover:shadow-lg 
+             transition-all duration-300 group
+             shadow-lg
+             "
           >
           <CardStock 
             :stock="stock"
@@ -85,7 +129,7 @@
                    Ver Todas →
             </router-link>
         </div>
-      </div>
+    </div>
 
       <!-- Métricas y Estadísticas -->
       <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -198,6 +242,7 @@ const stockStore = useStockStore()
 const { stocks, recommendations, filters } = storeToRefs(stockStore)
 
 const topStocks = ref([])
+const lowStocks = ref([])
 const topRecommendation = ref({})
 // const metrics = ref<Metrics>({
 //   totalStocks: 0,
@@ -222,15 +267,21 @@ onMounted(async () => {
   try {
 
      
-   filters.value.limit = 3
-     
+    filters.value.limit = 3
+    filters.value.confidence = 'desc'
+    filters.value.order = 'desc'
     await stockStore.fetchStocks()
-    await stockStore.fetchRecommendations()
-
-  
     topStocks.value = stocks.value
 
-    console.log(topStocks.value)
+
+    filters.value.confidence = 'asc'
+    filters.value.order = 'asc'
+    await stockStore.fetchStocks()
+    lowStocks.value = stocks.value
+
+
+    await stockStore.fetchRecommendations()
+
     topRecommendation.value = recommendations.value?.[0] || {}
     
     metrics.value = [

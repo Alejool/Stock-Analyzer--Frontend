@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-gray-50">
+  <div class="0">
     <!-- Hero Section -->
       <SectionSubHeader />
 
-        <div class="bg-white rounded-2xl shadow-xl p-8">
+        <div class=" rounded-2xl  p-8">
           <div class="text-center mb-8">
             <h2 class="text-3xl font-bold text-gray-800 mb-2">
               🏆 Todas las oportunidades

@@ -23,7 +23,7 @@ export const useStockStore = defineStore('stock', () => {
     limit: -1,
     sort_by: 'confidence',
     order: 'desc',
-     confidence: 'DESC',
+    confidence: 'DESC',
   })
 
   // Carousel specific state

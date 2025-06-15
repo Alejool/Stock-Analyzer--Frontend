@@ -24,12 +24,16 @@
               shadow-4xl *:p-8 px-4 rounded-full font-bold text-lg hover:bg-orange-50 transform hover:scale-105 transition-all duration-200 ">
               🚀 Ver Todas las Recomendaciones
             </router-link>
-            <button class="  px-8 py-4 
+            <router-link
+            to="/analytics"
+            v-if="!$route.path.includes('analytics')" 
+            class="bg-purple-600 text-white py-4 px-4
             shadow-4xl
             border-2 border-gray-300
-            rounded-full font-bold text-lg hover:bg-white hover:text-purple-600 transition-all duration-200">
+            rounded-full font-bold text-lg 
+             hover:bg-purple-800  transition-all duration-200 ">
               📊 Análisis Detallado
-            </button>
+            </router-link>
           </div>
         </div>
     </div>

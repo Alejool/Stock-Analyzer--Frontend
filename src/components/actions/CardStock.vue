@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <!-- <div class="absolute -top-3 -left-3 w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
       {{ index + 1 }}
     </div> -->
