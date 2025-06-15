@@ -19,6 +19,10 @@ export interface Stock {
   current_rating?: string
   confidence?: number
   lastUpdate?: string
+  total_register?: number
+  buy_count?: number
+  total_brokerages?: number
+  last_update?: string
 }
 
 export interface StockResponse {

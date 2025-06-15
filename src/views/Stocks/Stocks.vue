@@ -253,7 +253,7 @@ import CardStock from "../../components/actions/CardStock.vue";
 import SectionSubHeader from '../../components/sectionsCommon/SectionSubHeader.vue'
 
 const stockStore = useStockStore();
-const { stocks, carouselFilteredStocks } = storeToRefs(stockStore);
+const { stocks, carouselFilteredStocks, filters: filtersStore } = storeToRefs(stockStore);
 
 // Referencias del carrusel
 const carousel = ref(null);
@@ -426,6 +426,7 @@ const stopAutoPlay = () => {
 // Lifecycle hooks
 onMounted(async () => {
   try {
+    filtersStore.value.limit = -1
     await stockStore.fetchStocks();
     await nextTick();
 

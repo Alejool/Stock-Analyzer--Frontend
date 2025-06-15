@@ -18,7 +18,7 @@ export const useStockStore = defineStore('stock', () => {
   const recommendations = ref<Recommendation[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const filters = ref<StockFilters>({
+  let filters = ref<StockFilters>({
     page: 1,
     limit: -1,
     sort_by: 'confidence',
