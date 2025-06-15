@@ -29,11 +29,11 @@
     </div>
 
     <!-- Company Info -->
-    <div class="mb-6">
+    <div class=" h-32">
       <p class="text-2xl font-semibold text-gray-800 mb-2">
         {{ stock?.company || "-" }}
       </p>
-      <div class="flex items-center gap-3 text-md text-gray-600">
+      <div class="flex items-center gap-3 h-20 text-md text-gray-600">
         <span class="font-medium">{{ stock?.action || "-" }}</span>
         <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
         <span>{{ stock?.brokerage || "-" }}</span>

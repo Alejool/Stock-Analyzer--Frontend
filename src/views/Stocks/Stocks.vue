@@ -258,7 +258,7 @@ const { stocks, carouselFilteredStocks } = storeToRefs(stockStore);
 // Referencias del carrusel
 const carousel = ref(null);
 const currentSlide = ref(0);
-const cardWidth = ref(300);
+const cardWidth = ref(400);
 const visibleCards = ref(1);
 const slideWidth = ref(100);
 
