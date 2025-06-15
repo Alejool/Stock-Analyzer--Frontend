@@ -92,8 +92,8 @@
           <p class="text-gray-600">Insights y tendencias del mercado actualizados constantemente</p>
         </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- Métrica 1 -->
+        <!-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+       
           <div class="relative bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center border border-orange-200 hover:shadow-lg transition-all duration-300">
             <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -104,7 +104,7 @@
             <div class="text-xs text-orange-600 mt-1">+ {{ metrics?.totalStocks }} esta semana</div>
           </div>
           
-          <!-- Métrica 2 -->
+          
           <div class="relative bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center border border-green-200 hover:shadow-lg transition-all duration-300">
             <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -112,10 +112,9 @@
             </div>
             <div class="text-3xl font-bold text-gray-800 mb-2">{{ metrics?.buyRecommendations }}</div>
             <div class="text-sm font-medium text-gray-600">Recomendaciones BUY</div>
-            <!-- <div class="text-xs text-green-600 mt-1">↗️ +15% vs mes anterior</div> -->
           </div>
           
-          <!-- Métrica 3 -->
+ 
           <div class="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center border border-blue-200 hover:shadow-lg transition-all duration-300">
             <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -126,7 +125,7 @@
             <div class="text-xs text-blue-600 mt-1">Cobertura global</div>
           </div>
           
-          <!-- Métrica 4 -->
+          
           <div class="relative bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center border border-purple-200 hover:shadow-lg transition-all duration-300">
             <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -144,7 +143,25 @@
             <div class="text-sm font-medium text-gray-600">Última Actualización</div>
             <div class="text-xs text-purple-600 mt-1">Datos en vivo</div>
           </div>
-        </div>
+      </div> -->
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <template v-if="metrics && Object.keys(metrics).length > 0">
+        <CardMetric 
+          v-for="(metric, index) in metrics"
+          :key="index"
+          :title="metric.title"
+          :value="metric.value"
+          :icon="metric.icon"
+          :backgroundColor="metric.backgroundColor"
+          :iconBackground="metric.iconBackground"
+          :extraInfo="metric.extraInfo"
+          :borderColor="metric.borderColor"
+          :extraInfoColor="metric.extraInfoColor"
+          :pulseColor="metric.pulseColor"
+        />
+      </template>
+      </div>
         
         <!-- Call to Action Final -->
         <!-- <div class="mt-8 text-center bg-gradient-to-r from-orange-500 to-purple-600 rounded-xl p-5 text-white">
@@ -167,10 +184,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Stock, Metrics } from '../types/dashboard'
+import { Stock, } from '../types/dashboard'
+import { Metrics } from '../types'
 import { useStockStore,  } from '../stores/stockStore'
 import CardStock from '../components/actions/CardStock.vue'
 import SectionSubHeader from '../components/sectionsCommon/SectionSubHeader.vue'
+import CardMetric from '../components/card/CardMetric.vue'
 
 
 const stockStore = useStockStore()
@@ -178,12 +197,23 @@ const { stocks, recommendations, filters } = storeToRefs(stockStore)
 
 const topStocks = ref([])
 const topRecommendation = ref({})
-const metrics = ref<Metrics>({
-  totalStocks: 0,
-  buyRecommendations: 0,
-  totalBrokerages: 0,
-  lastUpdate: 'No se ha actualizado'
-})
+// const metrics = ref<Metrics>({
+//   totalStocks: 0,
+//   buyRecommendations: 0,
+//   totalBrokerages: 0,
+//   lastUpdate: 'No se ha actualizado'
+// })
+const metrics = ref<Metrics[]>([{
+  title: '',
+  value: '',
+  icon: '',
+  backgroundColor: '',
+  iconBackground: '',
+  extraInfo: '',
+  extraInfoColor: '',
+  pulseColor: '',
+  borderColor: ''
+}])
 
 
 onMounted(async () => {
@@ -195,19 +225,58 @@ onMounted(async () => {
     await stockStore.fetchStocks()
     await stockStore.fetchRecommendations()
 
-   
-    
+  
     topStocks.value = stocks.value
 
     console.log(topStocks.value)
     topRecommendation.value = recommendations.value?.[0] || {}
     
-    metrics.value = {
-      totalStocks: stocks.value[0]?.total_register || 0,
-      buyRecommendations: stocks.value[0]?.buy_count || 0,
-      totalBrokerages: stocks.value[0]?.total_brokerages || 0,
-      lastUpdate: stocks.value[0]?.last_update || 'No se ha actualizado'
-    }
+    metrics.value = [
+      {
+        title: "Acciones Analizadas",
+        value: stocks.value[0]?.total_register || 0,
+        icon: "📊",
+        backgroundColor: "from-orange-50 to-orange-100",
+        iconBackground: "from-orange-500 to-orange-600",
+        extraInfo: `+ ${stocks.value[0]?.total_register || 0} esta semana`,
+        extraInfoColor: "text-orange-600",
+        pulseColor: "green-400",
+        borderColor: "border-orange-200"
+      },
+      {
+        title: "Recomendaciones BUY",
+        value: stocks.value[0]?.buy_count || 0,
+        icon: "📈",
+        backgroundColor: "from-green-50 to-green-100",
+        iconBackground: "from-green-500 to-green-600",
+        extraInfo: "",
+        extraInfoColor: "text-green-600",
+        pulseColor: "green-400",
+        borderColor: "border-green-200"
+      },
+      {
+        title: "Brokerages Activos",
+        value: stocks.value[0]?.total_brokerages || 0,
+        icon: "🏢",
+        backgroundColor: "from-blue-50 to-blue-100",
+        iconBackground: "from-blue-500 to-blue-600",
+        extraInfo: "Cobertura global",
+        extraInfoColor: "text-blue-600",
+        pulseColor: "green-400",
+        borderColor: "border-blue-200"
+      },
+      {
+        title: "Última Actualización",
+        value: stocks.value[0]?.last_update || 'No se ha actualizado',
+        icon: "🕒",
+        backgroundColor: "from-purple-50 to-purple-100",
+        iconBackground: "from-purple-500 to-purple-600",
+        extraInfo: "Datos en vivo",
+        extraInfoColor: "text-purple-600",
+        pulseColor: "green-400",
+        borderColor: "border-purple-200"
+      }
+    ]
   } catch (error) {
     console.error('Error fetching stocks:', error)
   }

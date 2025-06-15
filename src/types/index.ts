@@ -55,3 +55,16 @@ export interface Recommendation {
   rating_to: string
   confidence: number
 }
+
+
+export interface Metrics {
+  title: string;
+  value: number;
+  icon: string;
+  backgroundColor: string;
+  iconBackground: string;
+  extraInfo?: string;
+  extraInfoColor?: string;
+  pulseColor?: string;
+  borderColor?: string;
+}

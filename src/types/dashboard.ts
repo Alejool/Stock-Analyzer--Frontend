@@ -9,11 +9,12 @@ export interface Stock {
   lastUpdate: string
 }
 
-export  interface Metrics {
-  totalStocks: number
-  buyRecommendations: number
-  totalBrokerages: number
-  lastUpdate: string
-}
+// export  interface Metrics {
+//   totalStocks: number
+//   buyRecommendations: number
+//   totalBrokerages: number
+//   lastUpdate: string
+// }
+
 
 
