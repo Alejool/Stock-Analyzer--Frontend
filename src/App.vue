@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
     <!-- Header -->
-    <!-- <header class="bg-gradient-to-r
+    <header class="bg-gradient-to-r
        from-orange-500 via-orange-600 to-purple-600 
        shadow-lg sticky top-0 z-50
        ">
@@ -41,7 +41,7 @@
           </div>
         </div>
       </nav>
-    </header> -->
+    </header>
      
     <!-- Main Content -->
     <main class="container mx-auto py-6 sm:py-8 px-4 lg:px-6 min-h-[calc(100vh-200px)]">
@@ -76,7 +76,7 @@
         
         <div class="mt-4 pt-4 border-t border-white/20">
           <div class="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-white/60">
-            <p>Desarrollado para el desafío técnico</p>
+            <p>Desarrollado por Alejandro Olarte</p>
             <p>Versión 1.0.0 - Actualizado {{ new Date().getFullYear() }}</p>
           </div>
         </div>
@@ -89,7 +89,7 @@
 const navigation = [
   { name: "Dashboard", path: "/" },
   { name: "Acciones", path: "/stocks" },
-  { name: "Análisis", path: "/analytics" },
-  { name: "Recomendaciones", path: "/recommendations" },
+  // { name: "Análisis", path: "/analytics" },
+  // { name: "Recomendaciones", path: "/recommendations" },
 ];
 </script>

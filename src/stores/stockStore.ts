@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { Stock, StockFilters, Recommendation } from '@/types'
+import type { Stock, StockFilters, Recommendation } from '../types'
 import { stockAPI } from '../services/api'
 
 export const useStockStore = defineStore('stock', () => {
@@ -13,7 +13,7 @@ export const useStockStore = defineStore('stock', () => {
     page: 1,
     limit: 20,
     sort_by: 'time',
-    order: 'desc'
+    order: 'asc'
   })
 
   // Getters
@@ -40,6 +40,7 @@ export const useStockStore = defineStore('stock', () => {
 
   // Actions
   async function fetchStocks(newFilters?: Partial<StockFilters>) {
+
     try {
       loading.value = true
       error.value = null
@@ -51,6 +52,7 @@ export const useStockStore = defineStore('stock', () => {
       const response = await stockAPI.getStocks(filters.value)
       stocks.value = response.items
     } catch (err) {
+      console.log('error: ', err)
       error.value = err instanceof Error ? err.message : 'Error desconocido'
     } finally {
       loading.value = false
@@ -77,7 +79,7 @@ export const useStockStore = defineStore('stock', () => {
   function clearFilters() {
     filters.value = {
       page: 1,
-      limit: 20,
+      limit: 50,
       sort_by: 'time',
       order: 'desc'
     }

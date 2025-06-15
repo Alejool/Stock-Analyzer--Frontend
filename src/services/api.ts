@@ -1,11 +1,13 @@
 
-import type { StockResponse, StockFilters } from '@/types'
+import type { StockResponse, StockFilters } from '../types'
 
-
-const API_BASE_URL = 'http://localhost:8080/api/v1'
+const RAIZ = import.meta.env.VITE_RAIZ_URL
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 class StockAPI {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
+
+    // console.log('${API_BASE_URL}${endpoint}', `${API_BASE_URL}${endpoint}`)
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -30,15 +32,16 @@ class StockAPI {
       }
     })
 
-    return this.request<StockResponse>(`/stocks?${params.toString()}`)
+    // return this.request<StockResponse>(`${RAIZ}/stocks?${params.toString()}`)
+    return this.request<StockResponse>(`${RAIZ}/stocks`)
   }
 
   async getRecommendations(): Promise<{ recommendations: any[] }> {
-    return this.request<{ recommendations: any[] }>('/recommendations')
+    return this.request<{ recommendations: any[] }>(`${RAIZ}/recommendations`)
   }
 
   async healthCheck(): Promise<{ status: string; message: string }> {
-    return this.request<{ status: string; message: string }>('/health')
+    return this.request<{ status: string; message: string }>(`${RAIZ}/health`) 
   }
 }
 

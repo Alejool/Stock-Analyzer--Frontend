@@ -13,6 +13,12 @@ export interface Stock {
   time: string
   created_at: string
   updated_at: string
+  score?: number
+  reason?: string
+  target_price?: string
+  current_rating?: string
+  confidence?: number
+  lastUpdate?: string
 }
 
 export interface StockResponse {
@@ -36,8 +42,11 @@ export interface Recommendation {
   ticker: string
   company: string
   score: number
+  sector?: string
+  rating?: string
   reason: string
   target_price: string
+  lastUpdate?: string
   current_rating: string
   confidence: number
 }
