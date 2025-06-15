@@ -221,22 +221,46 @@
 
           <!-- Estadísticas rápidas -->
           <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-green-50 rounded-lg p-4 text-center">
-              <div class="text-2xl font-bold text-green-600">{{ buyCount }}</div>
-              <div class="text-sm text-green-700">Recomendaciones Buy</div>
-            </div>
-            <div class="bg-amber-50 rounded-lg p-4 text-center">
-              <div class="text-2xl font-bold text-amber-600">{{ holdCount }}</div>
-              <div class="text-sm text-amber-700">Recomendaciones Hold</div>
-            </div>
-            <div class="bg-blue-50 rounded-lg p-4 text-center">
-              <div class="text-2xl font-bold text-blue-600">{{ avgScore.toFixed(1) }}</div>
-              <div class="text-sm text-blue-700">Score Promedio</div>
-            </div>
-            <div class="bg-purple-50 rounded-lg p-4 text-center">
-              <div class="text-2xl font-bold text-purple-600">{{ highConfidenceCount }}</div>
-              <div class="text-sm text-purple-700">Alta Confianza (>80%)</div>
-            </div>
+            <CardMetric 
+              title="Recomendaciones Buy"
+              :value="buyCount"
+              backgroundColor="from-green-50 to-green-100"
+              textColor="text-green-600"
+              labelColor="text-green-700"
+              borderColor="border-green-200"
+              iconBackground="bg-green-500"
+              icon="🏆"
+            />
+            <CardMetric
+              title="Recomendaciones Hold" 
+              :value="holdCount"
+              backgroundColor="from-amber-50 to-amber-100"
+              textColor="text-amber-600"
+              labelColor="text-amber-700"
+              borderColor="border-amber-200"
+              iconBackground="bg-amber-500"
+              icon="🏆"
+            />
+            <CardMetric
+              title="Score Promedio"
+              :value="avgScore"
+              backgroundColor="from-blue-50 to-blue-100"
+              textColor="text-blue-600"
+              labelColor="text-blue-700"
+              borderColor="border-blue-200"
+              iconBackground="bg-blue-500"
+              icon="🏆"
+            />
+            <CardMetric
+              title="Alta Confianza (>80%)"
+              :value="highConfidenceCount"
+              backgroundColor="from-purple-50 to-purple-100"
+              textColor="text-purple-600"
+              labelColor="text-purple-700"
+              borderColor="border-purple-200"
+              iconBackground="bg-purple-500"
+              icon="🏆"
+            />
           </div>
         </div>
       </div>
@@ -251,6 +275,7 @@ import { Stock, Metrics } from "../../types/dashboard";
 import { useStockStore } from "../../stores/stockStore";
 import CardStock from "../../components/actions/CardStock.vue";
 import SectionSubHeader from '../../components/sectionsCommon/SectionSubHeader.vue'
+import CardMetric from '../../components/card/CardMetric.vue'
 
 const stockStore = useStockStore();
 const { stocks, carouselFilteredStocks, filters: filtersStore } = storeToRefs(stockStore);
