@@ -4,11 +4,13 @@
     <SectionSubHeader />
 
         <!-- Recomendación Destacada -->
-        <div class="bg-indigo-900
-           text-gray-900 backdrop-blur-sm 
+        <div class="bg-gray-900
+            backdrop-blur-sm 
            rounded-2xl p-8 shadow-2xl overflow-hidden
            hover:scale-[1.04] transition-transform duration-300 ease-in-out
           ">
+
+
           <div class="text-center mb-6">
             <div class="inline-flex items-center gap-2 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full font-bold mb-4">
               ⭐ OPORTUNIDAD DESTACADA

@@ -11,7 +11,7 @@
              {{ $route.path.includes('stocks') ?  'Stock': 'Dashboard '  }}
           </h1>
           <p class="text-xl  mb-8">
-            Análisis inteligente • Decisiones rentables • Tiempo real
+            Análisis inteligente *   Decisiones rentables *  Tiempo real
           </p>
           
           <!-- CTA Principal -->

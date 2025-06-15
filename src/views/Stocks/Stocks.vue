@@ -243,7 +243,7 @@
             />
             <CardMetric
               title="Score Promedio"
-              :value="avgScore"
+              :value="avgScore.toFixed(2)"
               backgroundColor="from-blue-50 to-blue-100"
               textColor="text-blue-600"
               labelColor="text-blue-700"

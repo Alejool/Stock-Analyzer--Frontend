@@ -1,22 +1,25 @@
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
     <!-- Header -->
-    <header class="bg-gradient-to-r
-       from-orange-500 via-orange-600 to-purple-600 
-       shadow-lg sticky top-0 z-50
+
+        <!-- bg-gradient-to-r   from-orange-500 via-orange-600 to-purple-600  -->
+<!--  -->
+    <header class="
+        bg-gray-800
+        shadow-lg sticky top-0 z-50
+        text-emerald-800
        ">
       <nav class="container mx-auto px-4 lg:px-6">
         <div class="flex flex-col sm:flex-row justify-between items-center py-4 
         sm:h-28
         ">
           <div class="flex items-center mb-2 sm:mb-0">
-            <h1 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-             
+            <h1 class="text-4xl sm:text-2xl font-bold t flex items-center gap-2">
               <router-link
               to="/"
               class="text-white/80 hover:text-white transition-colors duration-200"
               >
-                <span class="text-2xl">📈</span>
+                <span class="text-3xl">📈</span>
                 <span class="hidden sm:inline">Stock Analyzer</span>
                 <span class="sm:hidden">SA</span>
               </router-link>
@@ -31,11 +34,11 @@
               :class="[
                 'px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 backdrop-blur-sm',
                 $route.path === route.path
-                  ? 'bg-white/20 text-white shadow-lg border border-white/30'
+                  ? 'bg-white/20 text-white shadow-lg border border-white/10'
                   : 'text-white/80 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/20',
               ]"
             >
-              <span class="hidden sm:inline">{{ route.name }}</span>
+              <span class="hidden sm:inline"> {{$route.path !== route.path ? '->': ''}} {{ route.name }}</span>
               <span class="sm:hidden">{{ route.name.charAt(0) }}</span>
             </router-link>
           </div>
@@ -49,12 +52,16 @@
     </main>
      
     <!-- Footer -->
-    <footer class="bg-gradient-to-r from-purple-600 via-purple-700 to-orange-500 text-white mt-auto">
+          <!-- bg-gradient-to-r from-purple-600 via-purple-700 to-orange-500  -->
+
+    <footer class="
+      bg-gray-800
+      text-white mt-auto">
       <div class="container mx-auto py-6 sm:py-8 px-4 lg:px-6">
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
             <div class="flex items-center gap-2">
-              <span class="text-2xl">📈</span>
+              <span class="text-3xl">📈</span>
               <h3 class="text-lg font-bold">Stock Analyzer</h3>
             </div>
             <p class="text-sm text-white/80 text-center sm:text-left">
