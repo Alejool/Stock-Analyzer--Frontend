@@ -63,13 +63,13 @@
           </div>
           
           <div class="flex flex-col items-center sm:items-end gap-2">
-            <div class="flex gap-4 text-sm">
+            <!-- <div class="flex gap-4 text-sm">
               <a href="#" class="text-white/80 hover:text-white transition-colors duration-200">Términos</a>
               <a href="#" class="text-white/80 hover:text-white transition-colors duration-200">Privacidad</a>
               <a href="#" class="text-white/80 hover:text-white transition-colors duration-200">Soporte</a>
-            </div>
+            </div> -->
             <p class="text-xs text-white/60">
-              © 2025 Stock Analyzer. Todos los derechos reservados.
+              © 2025 Stock Analyzer
             </p>
           </div>
         </div>

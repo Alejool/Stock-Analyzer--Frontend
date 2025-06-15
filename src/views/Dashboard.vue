@@ -20,21 +20,21 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div class="bg-white/10 rounded-xl p-4">
               <div class="text-3xl font-bold text-green-300 mb-1">{{ topRecommendation.score ? `${topRecommendation.score}/100` : '-' }}</div>
-              <div class="text-white/80">Puntuación IA</div>
+              <div class="text-white/80">Puntuación Algoritmo</div>
             </div>
             <div class="bg-white/10 rounded-xl p-4">
-              <div class="text-3xl font-bold text-orange-300 mb-1">{{ topRecommendation.target_price ? topRecommendation.target_price : '-' }}</div>
+              <div class="text-3xl font-bold text-orange-300 mb-1">{{ topRecommendation.target_to ? topRecommendation.target_to : '-' }}</div>
               <div class="text-white/80">Precio Objetivo</div>
             </div>
             <div class="bg-white/10 rounded-xl p-4">
-              <div class="text-2xl font-bold text-purple-300 mb-1">{{ topRecommendation.current_rating ? topRecommendation.current_rating : '-' }}</div>
+              <div class="text-2xl font-bold text-purple-300 mb-1">{{ topRecommendation.rating_to ? topRecommendation.rating_to : '-' }}</div>
               <div class="text-white/80">Recomendación</div>
             </div>
           </div>
 
           <div class="text-center mt-6 mb-4 text-white/70">
             <p> 
-              <span class="font-bold text-4xl">{{ topRecommendation.confidence *100 }}
+              <span class="font-bold text-4xl">{{ topRecommendation.confidence ? topRecommendation.confidence * 100 : 0 }}
               %</span>
                de confianza en la recomendación
             </p>

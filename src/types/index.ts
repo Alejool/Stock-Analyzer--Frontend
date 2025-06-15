@@ -36,6 +36,7 @@ export interface StockFilters {
   order?: 'asc' | 'desc'
   page?: number
   limit?: number
+  confidence?: string
 }
 
 export interface Recommendation {
@@ -45,8 +46,8 @@ export interface Recommendation {
   sector?: string
   rating?: string
   reason: string
-  target_price: string
+  target_to: string
   lastUpdate?: string
-  current_rating: string
+  rating_to: string
   confidence: number
 }

@@ -167,24 +167,37 @@
             </button>
 
             <!-- Indicadores del carrusel -->
-            <div class="flex justify-center mt-6 space-x-2">
-              <!-- Pagination dots -->
-              <button
-                v-for="(_, index) in Math.ceil(filteredStocks.length / visibleCards)"
-                :key="index"
-                @click="goToSlide(index)"
-                :class="[
-                  'w-3 h-3 rounded-full transition-all duration-200',
-                  {
-                    'bg-orange-500 scale-125': currentSlide === index,
-                    'bg-gray-300 hover:bg-gray-400': currentSlide !== index
-                  }
-                ]"
-                :aria-label="`Go to slide ${index + 1}`"
-                :aria-current="currentSlide === index ? 'true' : 'false'"
-              >
-                <span class="sr-only">Slide {{ index + 1 }}</span>
-              </button>
+            <div class="flex justify-center mt-6 space-x-2 overflow-x-auto pb-2">
+              <!-- Pagination dots - limited to 5 visible dots -->
+              <div class="flex space-x-2">
+                <button
+                  v-for="index in Math.min(5, Math.ceil(filteredStocks.length / visibleCards))"
+                  :key="index"
+                  @click="goToSlide(index - 1)"
+                  :class="[
+                    'w-3 h-3 rounded-full transition-all duration-200 flex-shrink-0',
+                    {
+                      'bg-orange-500 scale-125': currentSlide === (index - 1),
+                      'bg-gray-300 hover:bg-gray-400': currentSlide !== (index - 1)
+                    }
+                  ]"
+                  :aria-label="`Go to slide ${index}`"
+                  :aria-current="currentSlide === (index - 1) ? 'true' : 'false'"
+                >
+                  <span class="sr-only">Slide {{ index }}</span>
+                </button>
+              </div>
+
+              <!-- Scrollable indicator for remaining slides -->
+              <div v-if="Math.ceil(filteredStocks.length / visibleCards) > 5" 
+                class="h-3 w-20 bg-gray-200 rounded-full overflow-hidden">
+                <div 
+                  class="h-full bg-orange-500 transition-all duration-200"
+                  :style="{
+                    width: `${(currentSlide + 1) / Math.ceil(filteredStocks.length / visibleCards) * 100}%`
+                  }"
+                ></div>
+              </div>
             </div>
           </div>
 
@@ -222,7 +235,7 @@ import CardStock from "../../components/actions/CardStock.vue";
 import SectionSubHeader from '../../components/sectionsCommon/SectionSubHeader.vue'
 
 const stockStore = useStockStore();
-const { stocks } = storeToRefs(stockStore);
+const { stocks, carouselFilteredStocks } = storeToRefs(stockStore);
 
 // Referencias del carrusel
 const carousel = ref(null);
@@ -237,8 +250,11 @@ const filters = ref({
   brokerage: '',
   minScore: 0,
   search: '',
-  onlyHighConfidence: false
+  onlyHighConfidence: false,
+  initial:true
 });
+
+
 
 // Computed properties
 const uniqueBrokerages = computed(() => {
@@ -352,7 +368,8 @@ const clearFilters = () => {
     brokerage: '',
     minScore: 0,
     search: '',
-    onlyHighConfidence: false
+    onlyHighConfidence: false, 
+    initial:true
   };
   currentSlide.value = 0;
 };
@@ -381,9 +398,9 @@ const stopAutoPlay = () => {
 onMounted(async () => {
   try {
     await stockStore.fetchStocks();
-    
     await nextTick();
     updateCarouselDimensions();
+   
     
     window.addEventListener('resize', updateCarouselDimensions);
     
@@ -421,5 +438,4 @@ onUnmounted(() => {
   cursor: pointer;
   border: none;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-</style>
+}</style>

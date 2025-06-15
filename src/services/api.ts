@@ -6,8 +6,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL
 
 class StockAPI {
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-
-    // console.log('${API_BASE_URL}${endpoint}', `${API_BASE_URL}${endpoint}`)
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -32,8 +30,8 @@ class StockAPI {
       }
     })
 
-    // return this.request<StockResponse>(`${RAIZ}/stocks?${params.toString()}`)
-    return this.request<StockResponse>(`${RAIZ}/stocks`)
+    // Usar los parámetros en la URL
+    return this.request<StockResponse>(`${RAIZ}/stocks?${params.toString()}`)
   }
 
   async getRecommendations(): Promise<{ recommendations: any[] }> {

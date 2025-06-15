@@ -3,6 +3,15 @@ import { ref, computed } from 'vue'
 import type { Stock, StockFilters, Recommendation } from '../types'
 import { stockAPI } from '../services/api'
 
+export interface CarouselFilters {
+  rating: string
+  brokerage: string
+  minScore: number
+  search: string
+  onlyHighConfidence: boolean
+  initial:boolean
+}
+
 export const useStockStore = defineStore('stock', () => {
   // State
   const stocks = ref<Stock[]>([])
@@ -11,10 +20,26 @@ export const useStockStore = defineStore('stock', () => {
   const error = ref<string | null>(null)
   const filters = ref<StockFilters>({
     page: 1,
-    limit: 20,
-    sort_by: 'time',
-    order: 'asc'
+    limit: -1,
+    sort_by: 'confidence',
+    order: 'desc',
+     confidence: 'DESC',
   })
+
+  // Carousel specific state
+  const carouselFilters = ref<CarouselFilters>({
+    rating: '',
+    brokerage: '',
+    minScore: 0,
+    search: '',
+    onlyHighConfidence: false,
+    initial:true
+  })
+
+  const currentSlide = ref(0)
+  const visibleCards = ref(3)
+  const cardWidth = ref(350)
+  const slideWidth = ref(350)
 
   // Getters
   const filteredStocks = computed(() => {
@@ -32,6 +57,74 @@ export const useStockStore = defineStore('stock', () => {
     })
   })
 
+  // Carousel specific computed properties
+  const carouselFilteredStocks = computed(() => {
+    let filtered = stocks.value
+
+    if(carouselFilters.value.initial){
+      filtered = filtered.slice(0, 20);
+      carouselFilters.value.initial = false;
+    }
+
+    if (carouselFilters.value.rating) {
+      filtered = filtered.filter(stock =>
+        (stock.current_rating || stock.rating_to) === carouselFilters.value.rating
+      )
+    }
+
+    if (carouselFilters.value.brokerage) {
+      filtered = filtered.filter(stock => stock.brokerage === carouselFilters.value.brokerage)
+    }
+
+    if (carouselFilters.value.minScore > 0) {
+      filtered = filtered.filter(stock => (stock.score || 0) >= carouselFilters.value.minScore)
+    }
+
+    if (carouselFilters.value.search) {
+      const searchTerm = carouselFilters.value.search.toLowerCase()
+      filtered = filtered.filter(stock =>
+        stock.ticker?.toLowerCase().includes(searchTerm) ||
+        stock.company?.toLowerCase().includes(searchTerm)
+      )
+    }
+
+    if (carouselFilters.value.onlyHighConfidence) {
+      filtered = filtered.filter(stock => (stock.confidence || 0) > 0.8)
+    }
+
+    return filtered
+  })
+
+  const uniqueBrokerages = computed(() => {
+    return [...new Set(stocks.value.map(stock => stock.brokerage))].filter(Boolean)
+  })
+
+  const maxSlides = computed(() => {
+    return Math.max(0, Math.ceil(carouselFilteredStocks.value.length / visibleCards.value) - 1)
+  })
+
+  // Statistics computed properties
+  const buyCount = computed(() => {
+    return carouselFilteredStocks.value.filter(stock =>
+      (stock.current_rating || stock.rating_to) === 'Buy'
+    ).length
+  })
+
+  const holdCount = computed(() => {
+    return carouselFilteredStocks.value.filter(stock =>
+      (stock.current_rating || stock.rating_to) === 'Hold'
+    ).length
+  })
+
+  const avgScore = computed(() => {
+    const scores = carouselFilteredStocks.value.map(stock => stock.score || 0)
+    return scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
+  })
+
+  const highConfidenceCount = computed(() => {
+    return carouselFilteredStocks.value.filter(stock => (stock.confidence || 0) > 0.8).length
+  })
+
   const topRatedStocks = computed(() => {
     return stocks.value
       .filter(stock => ['Buy', 'Strong Buy', 'Outperform'].includes(stock.rating_to))
@@ -40,11 +133,10 @@ export const useStockStore = defineStore('stock', () => {
 
   // Actions
   async function fetchStocks(newFilters?: Partial<StockFilters>) {
-
     try {
       loading.value = true
       error.value = null
-      
+
       if (newFilters) {
         filters.value = { ...filters.value, ...newFilters }
       }
@@ -86,6 +178,65 @@ export const useStockStore = defineStore('stock', () => {
     fetchStocks()
   }
 
+  // Carousel specific actions
+  function updateCarouselFilters(newFilters: Partial<CarouselFilters>) {
+    carouselFilters.value = { ...carouselFilters.value, ...newFilters }
+    currentSlide.value = 0 // Reset carousel position
+  }
+
+  function clearCarouselFilters() {
+    carouselFilters.value = {
+      rating: '',
+      brokerage: '',
+      minScore: 0,
+      search: '',
+      onlyHighConfidence: false,
+      initial:true
+    }
+    currentSlide.value = 0
+  }
+
+  function updateCarouselDimensions(containerWidth: number) {
+    if (containerWidth >= 1200) {
+      visibleCards.value = 4
+      cardWidth.value = Math.floor(containerWidth / 4) - 24
+    } else if (containerWidth >= 900) {
+      visibleCards.value = 3
+      cardWidth.value = Math.floor(containerWidth / 3) - 24
+    } else if (containerWidth >= 600) {
+      visibleCards.value = 2
+      cardWidth.value = Math.floor(containerWidth / 2) - 24
+    } else {
+      visibleCards.value = 1
+      cardWidth.value = containerWidth - 48
+    }
+
+    slideWidth.value = cardWidth.value + 24 // Incluyendo padding
+  }
+
+  function nextSlide() {
+    if (currentSlide.value < maxSlides.value) {
+      currentSlide.value++
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide.value > 0) {
+      currentSlide.value--
+    }
+  }
+
+  function goToSlide(index: number) {
+    currentSlide.value = Math.min(index, maxSlides.value)
+  }
+
+  function resetCarouselPosition() {
+    // Ajustar currentSlide si es necesario cuando cambian los filtros
+    if (currentSlide.value > maxSlides.value) {
+      currentSlide.value = Math.max(0, maxSlides.value)
+    }
+  }
+
   return {
     // State
     stocks,
@@ -93,13 +244,34 @@ export const useStockStore = defineStore('stock', () => {
     loading,
     error,
     filters,
+    carouselFilters,
+    currentSlide,
+    visibleCards,
+    cardWidth,
+    slideWidth,
+
     // Getters
     filteredStocks,
+    carouselFilteredStocks,
+    uniqueBrokerages,
+    maxSlides,
+    buyCount,
+    holdCount,
+    avgScore,
+    highConfidenceCount,
     topRatedStocks,
+
     // Actions
     fetchStocks,
     fetchRecommendations,
     updateFilters,
-    clearFilters
+    clearFilters,
+    updateCarouselFilters,
+    clearCarouselFilters,
+    updateCarouselDimensions,
+    nextSlide,
+    prevSlide,
+    goToSlide,
+    resetCarouselPosition
   }
 })
