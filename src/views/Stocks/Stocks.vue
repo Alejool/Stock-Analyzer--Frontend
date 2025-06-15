@@ -90,7 +90,7 @@
             </div>
 
             <!-- Filtros adicionales en una fila -->
-            <div class="flex flex-wrap gap-4 items-center">
+            <div class="flex flex-wrap gap-4 items-center justify-between mt-8">
               <div class="flex items-center">
                 <input 
                   v-model="filters.onlyHighConfidence" 
@@ -103,6 +103,24 @@
                   Solo alta confianza (>80%)
                 </label>
               </div>
+              <div class="flex items-center">
+                <select
+                  v-model="filters.quantity"
+                  @change="applyFilters"
+                  class="px-3 py-2 border text-gray-700
+                   border-gray-300 font-bold rounded-lg 
+                   focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                >
+                  <option value="all">Ver todos</option>
+                  <option value="10">10 elementos</option>
+                  <option value="20">20 elementos</option>
+                  <option value="50">50 elementos</option>
+                  <option value="100">100 elementos</option>
+                  <option value="200">200 elementos</option>
+                  <option value="500">500 elementos</option>
+                  <option value="2000">2000 elementos</option>
+                </select>
+              </div>
 
               <button 
                 @click="clearFilters"
@@ -111,10 +129,10 @@
                 🗑️ Limpiar filtros
               </button>
 
-              <div class="text-sm text-gray-600">
+            </div>
+              <div class="text-sm text-gray-600 flex justify-end w-full">
                 Mostrando {{ filteredStocks.length }} de {{ stocks.length }} resultados
               </div>
-            </div>
           </div>
 
           <!-- Carrusel de Stocks -->
@@ -251,7 +269,8 @@ const filters = ref({
   minScore: 0,
   search: '',
   onlyHighConfidence: false,
-  initial:true
+  initial:false,
+  quantity:'50'
 });
 
 
@@ -263,7 +282,11 @@ const uniqueBrokerages = computed(() => {
 
 const filteredStocks = computed(() => {
   let filtered = stocks.value;
+  let filteredInitial = stocks.value;
+  
 
+  // (filterPage) ? filtered= filteredInitial : filtered = filtered.slice(0,20)
+  
   if (filters.value.rating) {
     filtered = filtered.filter(stock => 
       (stock.current_rating || stock.rating_to) === filters.value.rating
@@ -288,6 +311,11 @@ const filteredStocks = computed(() => {
 
   if (filters.value.onlyHighConfidence) {
     filtered = filtered.filter(stock => (stock.confidence || 0) > 0.8);
+  }
+
+   if (filters.value.quantity!='all'){
+    filtered= filtered.slice(0,filters.value.quantity)
+    // filters.value.initial = filtered.length <= 20;
   }
 
   return filtered;
@@ -369,7 +397,8 @@ const clearFilters = () => {
     minScore: 0,
     search: '',
     onlyHighConfidence: false, 
-    initial:true
+    initial:true,
+    quantity:'all'
   };
   currentSlide.value = 0;
 };
@@ -399,9 +428,7 @@ onMounted(async () => {
   try {
     await stockStore.fetchStocks();
     await nextTick();
-    updateCarouselDimensions();
-   
-    
+
     window.addEventListener('resize', updateCarouselDimensions);
     
     // Iniciar auto-play si hay suficientes elementos

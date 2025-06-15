@@ -61,10 +61,6 @@ export const useStockStore = defineStore('stock', () => {
   const carouselFilteredStocks = computed(() => {
     let filtered = stocks.value
 
-    if(carouselFilters.value.initial){
-      filtered = filtered.slice(0, 20);
-      carouselFilters.value.initial = false;
-    }
 
     if (carouselFilters.value.rating) {
       filtered = filtered.filter(stock =>
