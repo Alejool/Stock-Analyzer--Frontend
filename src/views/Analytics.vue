@@ -2,6 +2,7 @@
   <div class="min-h-screen p-6">
     <!-- Header Section -->
     <sectionSubHeader />
+
     <div class="mb-8">
       <!-- Summary Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -53,222 +54,265 @@
       </div>
     </div>
 
-    <!-- Filters Section -->
-    <div
-      class="bg-white rounded-xl shadow-lg p-8 mb-8 transition-all hover:shadow-2xl"
-      >
-      <h3
-        class="text-xl font-semibold text-gray-900 mb-6 flex items-center space-x-2"
-      >
-        <span>🔍</span>
-        <span>Filtros de Análisis</span>
-      </h3>
+    <div class="flex justify-end items-center space-x-4 w-full my-5">
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
+        class="bg-green-700 text-white px-6 py-2 rounded-lg text-sm font-bold"
       >
-        <!-- Brokerage Select -->
-        <div>
-          <select
-            v-model="filters.brokerage"
-            @change="applyFilters"
-            class="block w-full border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg shadow-sm text-sm px-4 py-2.5"
-          >
-            <option value="">Todos los Brokerages</option>
-            <option
-              v-for="brokerage in uniqueBrokerages"
-              :key="brokerage"
-              :value="brokerage"
-            >
-              {{ brokerage }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Action Select -->
-        <div>
-          <select
-            v-model="filters.action"
-            @change="applyFilters"
-            class="block w-full border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg shadow-sm text-sm px-4 py-2.5"
-          >
-            <option value="">Todas las Acciones</option>
-            <option value="target raised by">Target Raised</option>
-            <option value="target lowered by">Target Lowered</option>
-            <option value="rating upgraded">Rating Upgraded</option>
-            <option value="rating downgraded">Rating Downgraded</option>
-          </select>
-        </div>
-
-        <!-- Score Range Select -->
-        <div>
-          <select
-            v-model="filters.scoreRange"
-            @change="applyFilters"
-            class="block w-full border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg shadow-sm text-sm px-4 py-2.5"
-          >
-            <option value="">Todos los Scores</option>
-            <option value="high">Alto (70-100)</option>
-            <option value="medium">Medio (50-69)</option>
-            <option value="low">Bajo (0-49)</option>
-          </select>
-        </div>
-
-        <!-- Date From Input -->
-        <div>
-          <input
-            v-model="filters.dateFrom"
-            @change="applyFilters"
-            type="date"
-            class="block w-full border-gray-300 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg shadow-sm text-sm px-4 py-2.5"
-          />
-        </div>
-
-        <!-- Clear Filters Button -->
-        <div class="flex items-center justify-center ">
-
-          <button
-            @click="clearFilters"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg
-             hover:bg-gray-300 transition-colors duration-200 text-sm font-medium"
-          >
-            🗑️ Limpiar filtros
-          </button>
-        </div>
+        🟢  En vivo
+      </div>
+      <div class="text-gray-900/80 text-sm font-bold">
+        {{ currentTime }}
       </div>
     </div>
 
-    
+    <!-- Filters Section  -->
+    <div
+      class="relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-blue-50 rounded-lg shadow-2xl border border-slate-200/60 p-6 mb-8 backdrop-blur-sm"
+    >
+      <!-- Decorative elements -->
+      <div
+        class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-indigo-400/20 to-pink-400/20 rounded-full blur-2xl"
+      ></div>
 
-    <!-- Charts Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-      <!-- Actions Distribution -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">
-          📊 Distribución de Acciones
-        </h3>
-        <div class="space-y-4">
-          <div
-            v-for="(action, index) in actionsDistribution"
-            :key="action.name"
-            class="flex items-center justify-between"
-          >
-            <div class="flex items-center space-x-3">
-              <div
-                :class="getActionColor(action.name)"
-                class="w-4 h-4 rounded-full"
-              ></div>
-              <span class="text-sm font-medium text-gray-700">{{
-                action.name
-              }}</span>
-            </div>
-            <div class="flex items-center space-x-2">
-              <span class="text-sm text-gray-600">{{ action.count }}</span>
-              <div class="w-20 bg-gray-200 rounded-full h-2">
-                <div
-                  :class="getActionColor(action.name)"
-                  :style="{
-                    width: (action.count / filteredData.length) * 100 + '%',
-                  }"
-                  class="h-2 rounded-full transition-all duration-500"
-                ></div>
-              </div>
-              <span class="text-xs text-gray-500"
-                >{{
-                  ((action.count / filteredData.length) * 100).toFixed(1)
-                }}%</span
+      <div class="relative z-10">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="flex items-center justify-center w-14 h-14">
+            <span class="text-2xl">🔍</span>
+          </div>
+          <div>
+            <h3
+              class="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+            >
+              Filtros de Análisis
+            </h3>
+            <p class="text-sm text-gray-600 mt-1">
+              Refina tu búsqueda para obtener insights precisos
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6"
+        >
+          <!-- Brokerage Select -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >Brokerage</label
+            >
+            <div class="relative">
+              <select
+                v-model="filters.brokerage"
+                @change="applyFilters"
+                class="w-full appearance-none bg-white/80 backdrop-blur-sm border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-300 hover:shadow-md"
               >
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Target Price Changes -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">
-          💰 Cambios en Precios Objetivo
-        </h3>
-        <div class="space-y-4">
-          <div
-            class="flex justify-between items-center p-3 bg-green-50 rounded-lg"
-          >
-            <span class="text-sm font-medium text-green-800"
-              >Incrementos de Target</span
-            >
-            <span class="text-lg font-bold text-green-600">{{
-              targetChangesStats.increases
-            }}</span>
-          </div>
-          <div
-            class="flex justify-between items-center p-3 bg-red-50 rounded-lg"
-          >
-            <span class="text-sm font-medium text-red-800"
-              >Decrementos de Target</span
-            >
-            <span class="text-lg font-bold text-red-600">{{
-              targetChangesStats.decreases
-            }}</span>
-          </div>
-          <div
-            class="flex justify-between items-center p-3 bg-blue-50 rounded-lg"
-          >
-            <span class="text-sm font-medium text-blue-800"
-              >Promedio de Cambio</span
-            >
-            <span class="text-lg font-bold text-blue-600">
-              {{ targetChangesStats.average > 0 ? "+" : ""
-              }}{{ targetChangesStats.average.toFixed(2) }}%
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Analysis Section -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
-      <!-- Top Performers -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">
-          🏆 Mejores Performadores
-        </h3>
-        <div class="space-y-3">
-          <div
-            v-for="(company, index) in topPerformers"
-            :key="company.ticker"
-            class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <div class="flex items-center space-x-3">
-              <div class="flex-shrink-0">
-                <div
-                  :class="getRankingBadgeColor(index)"
-                  class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                <option value="">Todos los Brokerages</option>
+                <option
+                  v-for="brokerage in uniqueBrokerages"
+                  :key="brokerage"
+                  :value="brokerage"
                 >
-                  {{ index + 1 }}
-                </div>
-              </div>
-              <div>
-                <div class="font-semibold text-gray-900">
-                  {{ company.ticker }}
-                </div>
-                <div class="text-xs text-gray-600 truncate">
-                  {{ company.company }}
-                </div>
+                  {{ brokerage }}
+                </option>
+              </select>
+              <div
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
               </div>
             </div>
-            <div class="text-right">
-              <div
-                :class="getScoreColorClass(company.score)"
-                class="text-sm font-bold"
+          </div>
+
+          <!-- Action Select -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >Acción</label
+            >
+            <div class="relative">
+              <select
+                v-model="filters.action"
+                @change="applyFilters"
+                class="w-full appearance-none bg-white/80 backdrop-blur-sm border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-300 hover:shadow-md"
               >
-                {{ company.score }}
+                <option value="">Todas las Acciones</option>
+                <option value="target raised by">Target Raised</option>
+                <option value="target lowered by">Target Lowered</option>
+                <option value="rating upgraded">Rating Upgraded</option>
+                <option value="rating downgraded">Rating Downgraded</option>
+              </select>
+              <div
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
               </div>
-              <div
-                :class="
-                  company.targetChange >= 0 ? 'text-green-600' : 'text-red-600'
-                "
-                class="text-xs"
+            </div>
+          </div>
+
+          <!-- Score Range Select -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >Score Range</label
+            >
+            <div class="relative">
+              <select
+                v-model="filters.scoreRange"
+                @change="applyFilters"
+                class="w-full appearance-none bg-white/80 backdrop-blur-sm border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-300 hover:shadow-md"
               >
-                {{ company.targetChange > 0 ? "+" : ""
-                }}{{ company.targetChange.toFixed(1) }}%
+                <option value="">Todos los Scores</option>
+                <option value="high">Alto (70-100)</option>
+                <option value="medium">Medio (50-69)</option>
+                <option value="low">Bajo (0-49)</option>
+              </select>
+              <div
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date From Input -->
+          <div class="group">
+            <label class="block text-sm font-semibold text-gray-700 mb-2"
+              >Fecha Desde</label
+            >
+            <input
+              v-model="filters.dateFrom"
+              @change="applyFilters"
+              type="date"
+              class="w-full bg-white/80 backdrop-blur-sm border-2 border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 hover:border-blue-300 hover:shadow-md"
+            />
+          </div>
+
+          <!-- Clear Filters Button -->
+          <div class="flex items-end">
+            <button
+              @click="clearFilters"
+              class="w-full group relative px-6 py-3 bg-gray-300/90 rounded-xl font-semibold text-sm shadow-lg hover:shadow-2xl"
+            >
+              <span class="flex items-center justify-center gap-2">
+                <span class="text-lg">🗑️</span>
+                <span>Limpiar</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="text-end text-sm mt-6 mb-4">
+        Mostrando
+        <span class="text-cyan-900 font-bold">
+          {{ filteredData.length }}
+        </span>
+        de
+        <span class="">
+          {{ stocks.length }}
+        </span>
+        resultados
+      </div>
+    </div>
+    <!-- Analysis Section  -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 mb-4">
+      <!-- Top Performers -->
+      <div
+        class="group relative overflow-hidden bg-gradient-to-br from-white to-amber-50/50 rounded-lg shadow-2xl border border-slate-200/60 p-6"
+      >
+        <div
+          class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-amber-400/10 to-yellow-400/10 rounded-full blur-2xl"
+        ></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-1 mb-6">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center">
+              <span class="text-xl">🏆</span>
+            </div>
+            <h3
+              class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+            >
+              Mejores Performadores
+            </h3>
+          </div>
+
+          <div class="space-y-3 h-[300px] overflow-y-auto">
+            <div
+              v-for="(company, index) in topPerformers"
+              :key="company.ticker"
+              class="group/item flex items-center justify-between p-4 bg-white/60 rounded-2xl hover:bg-white/80 hover:shadow-lg transition-all duration-300 border border-slate-100"
+            >
+              <div class="flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                  <div
+                    :class="getRankingBadgeColor(index)"
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-lg group-hover/item:scale-110 transition-transform duration-300"
+                  >
+                    {{ index + 1 }}
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold text-gray-900 text-base">
+                    {{ company.ticker }}
+                  </div>
+                  <div class="text-xs text-gray-600 truncate max-w-32">
+                    {{ company.company }}
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div
+                  :class="getScoreColorClass(company.score)"
+                  class="text-lg font-bold"
+                >
+                  {{ company.score }}
+                </div>
+                <div
+                  :class="
+                    company.targetChange >= 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  "
+                  class="text-sm font-semibold"
+                >
+                  {{ company.targetChange > 0 ? "+" : ""
+                  }}{{ company.targetChange.toFixed(1) }}%
+                </div>
               </div>
             </div>
           </div>
@@ -276,46 +320,62 @@
       </div>
 
       <!-- Brokerages Analysis -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">
-          🏢 Análisis de Brokerages
-        </h3>
-        <div class="space-y-4">
-          <div
-            v-for="brokerage in brokerageAnalysis.slice(0, 5)"
-            :key="brokerage.name"
-            class="border border-gray-200 rounded-lg p-4"
-          >
-            <div class="flex justify-between items-start mb-2">
-              <h4 class="font-semibold text-gray-900 text-sm">
-                {{ brokerage.name }}
-              </h4>
-              <span
-                class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
-              >
-                {{ brokerage.count }} acciones
-              </span>
+      <div
+        class="group relative overflow-hidden bg-gradient-to-br from-white to-purple-50/50 rounded-lg s hadow-2xl border border-slate-200/60 p-4"
+      >
+        <div
+          class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-400/10 to-indigo-400/10 rounded-full blur-2xl"
+        ></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-1 mb-6">
+            <div class="w-12 h-12 flex items-center justify-center">
+              <span class="text-xl">🏢</span>
             </div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span class="text-gray-600">Score:</span>
-                <span class="font-medium ml-1">{{
-                  brokerage.avgScore.toFixed(1)
-                }}</span>
-              </div>
-              <div>
-                <span class="text-gray-600">Target:</span>
+            <h3
+              class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+            >
+              Análisis de Brokerages
+            </h3>
+          </div>
+
+          <div class="space-y-2 h-[300px] overflow-y-auto">
+            <div
+              v-for="brokerage in brokerageAnalysis"
+              :key="brokerage.name"
+              class="group/item border-2 border-slate-200 rounded-2xl p-4 hover:border-purple-300 hover:shadow-lg transition-all duration-300 bg-white/60"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <h2 class="font-bold text-gray-900 text-xs">
+                  {{ brokerage.name }}
+                </h2>
                 <span
-                  :class="
-                    brokerage.avgTargetChange >= 0
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  "
-                  class="font-medium ml-1"
+                  class="text-xs bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 px-3 py-1 rounded-full font-semibold border border-purple-200"
                 >
-                  {{ brokerage.avgTargetChange > 0 ? "+" : ""
-                  }}{{ brokerage.avgTargetChange.toFixed(1) }}%
+                  {{ brokerage.count }} acciones
                 </span>
+              </div>
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="bg-slate-50 rounded-lg p-2">
+                  <span class="text-gray-600">Score:</span>
+                  <span class="font-bold ml-1 text-gray-900">{{
+                    brokerage.avgScore.toFixed(1)
+                  }}</span>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-2">
+                  <span class="text-gray-600">Target:</span>
+                  <span
+                    :class="
+                      brokerage.avgTargetChange >= 0
+                        ? 'text-green-600'
+                        : 'text-red-600'
+                    "
+                    class="font-bold ml-1"
+                  >
+                    {{ brokerage.avgTargetChange > 0 ? "+" : ""
+                    }}{{ brokerage.avgTargetChange.toFixed(1) }}%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -323,66 +383,232 @@
       </div>
 
       <!-- Market Sentiment -->
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">
-          📈 Sentimiento del Mercado
-        </h3>
-        <div class="space-y-4">
-          <div class="space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Alcista</span>
-              <span class="font-medium text-green-600"
-                >{{ sentimentData.bullish.toFixed(1) }}%</span
-              >
+      <div
+        class="group relative overflow-hidden bg-gradient-to-br from-white to-cyan-50/50 rounded-lg shadow-2xl border border-slate-200/60 p-6"
+      >
+        <div
+          class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-cyan-400/10 to-blue-400/10 rounded-full blur-2xl"
+        ></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 flex items-center justify-center">
+              <span class="text-xl">📈</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div
-                class="bg-green-500 h-2 rounded-full transition-all duration-700"
-                :style="{ width: sentimentData.bullish + '%' }"
-              ></div>
-            </div>
+            <h3
+              class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+            >
+              Sentimiento del Mercado
+            </h3>
           </div>
 
-          <div class="space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Bajista</span>
-              <span class="font-medium text-red-600"
-                >{{ sentimentData.bearish.toFixed(1) }}%</span
-              >
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div
-                class="bg-red-500 h-2 rounded-full transition-all duration-700"
-                :style="{ width: sentimentData.bearish + '%' }"
-              ></div>
-            </div>
-          </div>
-
-          <div class="space-y-2">
-            <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Neutral</span>
-              <span class="font-medium text-gray-600"
-                >{{ sentimentData.neutral.toFixed(1) }}%</span
-              >
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div
-                class="bg-gray-500 h-2 rounded-full transition-all duration-700"
-                :style="{ width: sentimentData.neutral + '%' }"
-              ></div>
-            </div>
-          </div>
-
-          <div
-            class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg"
-          >
-            <div class="text-center">
-              <div class="text-2xl font-bold text-gray-900">
-                {{ overallSentiment.label }}
+          <div class="space-y-6">
+            <div class="space-y-3">
+              <div class="flex justify-between text-sm font-semibold">
+                <span class="text-gray-700">Alcista</span>
+                <span class="text-green-600"
+                  >{{ feelingData.bullish.toFixed(1) }}%</span
+                >
               </div>
-              <div class="text-sm text-gray-600">Sentimiento General</div>
-              <div :class="overallSentiment.color" class="text-xs mt-1">
-                {{ overallSentiment.description }}
+              <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  class="bg-gradient-to-r from-green-500 to-emerald-500 h-full rounded-full transition-all duration-1000 ease-out shadow-sm"
+                  :style="{ width: feelingData.bullish + '%' }"
+                ></div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex justify-between text-sm font-semibold">
+                <span class="text-gray-700">Bajista</span>
+                <span class="text-red-600"
+                  >{{ feelingData.bearish.toFixed(1) }}%</span
+                >
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  class="bg-gradient-to-r from-red-500 to-rose-500 h-full rounded-full transition-all duration-1000 ease-out shadow-sm"
+                  :style="{ width: feelingData.bearish + '%' }"
+                ></div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex justify-between text-sm font-semibold">
+                <span class="text-gray-700">Neutral</span>
+                <span class="text-gray-600"
+                  >{{ feelingData.neutral.toFixed(1) }}%</span
+                >
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  class="bg-gradient-to-r from-gray-500 to-slate-500 h-full rounded-full transition-all duration-1000 ease-out shadow-sm"
+                  :style="{ width: feelingData.neutral + '%' }"
+                ></div>
+              </div>
+            </div>
+
+            <div
+              class="mt-10 p-6 h-full bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-2xl border border-blue-200/50"
+            >
+              <div class="text-center">
+                <div class="text-3xl font-bold text-gray-900 mb-1">
+                  {{ overallSentiment.label }}
+                </div>
+                <div class="text-sm font-semibold text-gray-600 mb-2">
+                  Sentimiento General
+                </div>
+                <div
+                  :class="overallSentiment.color"
+                  class="text-xs font-medium"
+                >
+                  {{ overallSentiment.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section  -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <!-- Actions Distribution -->
+      <div
+        class="group relative overflow-hidden bg-gradient-to-br from-white to-blue-50/50 rounded-lg shadow-sm border border-slate-200/60 p-6 hover:shadow-lg"
+      >
+        <div
+          class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-2xl"
+        ></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 flex items-center justify-center">
+              <span class="text-xl">📊</span>
+            </div>
+            <h3
+              class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+            >
+              Distribución de Acciones
+            </h3>
+          </div>
+
+          <div class="">
+            <div
+              v-for="(action, index) in actionsDistribution"
+              :key="action.name"
+              class="group/item flex items-center justify-between p-4 rounded-2xl hover:bg-white transition-all duration-300"
+            >
+              <div class="flex items-center space-x-2">
+                <div
+                  :class="getActionColor(action.name)"
+                  class="w-4 h-4 rounded-full shadow-sm group-hover/item:scale-110 transition-transform duration-300"
+                ></div>
+                <span class="text-sm font-semibold text-gray-700">{{
+                  action.name
+                }}</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span
+                  class="text-sm font-bold text-gray-600 min-w-[2rem] text-right"
+                  >{{ action.count }}</span
+                >
+                <div
+                  class="w-24 bg-gray-200 rounded-full h-2.5 overflow-hidden"
+                >
+                  <div
+                    :class="getActionColor(action.name)"
+                    :style="{
+                      width: (action.count / filteredData.length) * 100 + '%',
+                    }"
+                    class="h-full rounded-full transition-all duration-700 ease-out"
+                  ></div>
+                </div>
+                <span
+                  class="text-sm font-medium text-gray-500 min-w-[3rem] text-right"
+                  >{{
+                    ((action.count / filteredData.length) * 100).toFixed(1)
+                  }}%</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Price Changes -->
+      <div
+        class="group relative overflow-hidden bg-gradient-to-br from-white to-green-50/50 rounded-lg shadow-2xl border border-slate-200/60 p-6"
+      >
+        <div
+          class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-400/10 to-emerald-400/10 rounded-full blur-2xl"
+        ></div>
+
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 flex items-center justify-center">
+              <span class="text-xl">💰</span>
+            </div>
+            <h3
+              class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
+            >
+              Cambios en Precios Objetivo
+            </h3>
+          </div>
+
+          <div class="space-y-4">
+            <div
+              class="group/item p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-200/50 hover:shadow-lg transition-all duration-300"
+            >
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold text-green-800"
+                  >Incrementos de Target</span
+                >
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                  ></div>
+                  <span class="text-2xl font-bold text-green-600">{{
+                    targetChangesStats.increases
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="group/item p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-2xl border border-red-200/50 hover:shadow-lg transition-all duration-300"
+            >
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold text-red-800"
+                  >Decrementos de Target</span
+                >
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-2 h-2 bg-red-500 rounded-full animate-pulse"
+                  ></div>
+                  <span class="text-2xl font-bold text-red-600">{{
+                    targetChangesStats.decreases
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="group/item p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-200/50 hover:shadow-lg transition-all duration-300"
+            >
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-semibold text-blue-800"
+                  >Promedio de Cambio</span
+                >
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                  ></div>
+                  <span class="text-2xl font-bold text-blue-600">
+                    {{ targetChangesStats.average > 0 ? "+" : ""
+                    }}{{ targetChangesStats.average.toFixed(2) }}%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -450,19 +676,20 @@
 </template>
 
 <script setup>
-import { computed, reactive, watch, onMounted } from "vue";
+import { computed, reactive, watch, ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
-import { useAnalyticsStore } from "../stores/analytics";
 import { useStockStore } from "../stores/stockStore";
+import { useAnalyticsStore } from "../stores/analytics";
 
+// Components
 import sectionSubHeader from "../components/sectionsCommon/sectionSubHeader.vue";
 import CardMetric from "../components/card/CardMetric.vue";
 const stockStore = useStockStore();
 const analyticsStore = useAnalyticsStore();
+
+// Stores
 const { stocks, filters: filtersStore } = storeToRefs(stockStore);
 const { data } = storeToRefs(analyticsStore);
-
-// Store
 
 // Reactive filters
 const filters = reactive({
@@ -472,6 +699,15 @@ const filters = reactive({
   dateFrom: "",
   dateTo: "",
 });
+
+// Add this to the existing script setup section:
+const currentTime = ref(new Date().toLocaleString("es-ES"));
+
+// Update time every second
+
+const timer = setInterval(() => {
+  currentTime.value = new Date().toLocaleString("es-ES");
+}, 1000);
 
 // Computed properties
 const filteredData = computed(() => {
@@ -597,7 +833,7 @@ const brokerageAnalysis = computed(() => {
     .sort((a, b) => b.count - a.count);
 });
 
-const sentimentData = computed(() => {
+const feelingData = computed(() => {
   const total = filteredData.value.length;
   if (total === 0) return { bullish: 0, bearish: 0, neutral: 0 };
 
@@ -620,7 +856,7 @@ const sentimentData = computed(() => {
 });
 
 const overallSentiment = computed(() => {
-  const { bullish, bearish, neutral } = sentimentData.value;
+  const { bullish, bearish, neutral } = feelingData.value;
 
   if (bullish > bearish && bullish > neutral) {
     return {
@@ -701,7 +937,6 @@ const formatDate = (dateString) => {
 };
 
 const applyFilters = () => {
-  // Los filtros se aplican automáticamente a través de computed properties
   console.log("Filtros aplicados:", filters);
 };
 
@@ -717,7 +952,10 @@ onMounted(async () => {
     await stockStore.fetchStocks();
 
     console.log(stocks.value);
-    console.log(analyticsStore);
+    console.log(data);
+    setTimeout(() => {
+      console.log(currentTime.value);
+    }, 1000);
 
     data.value = stocks.value ?? { items: [] };
   } catch (error) {
@@ -725,9 +963,8 @@ onMounted(async () => {
   }
 });
 
-// Watch for data changes
 watch(
-  () => analyticsStore.data,
+  () => data.value,
   () => {
     console.log("Data updated in analytics");
   },
@@ -736,7 +973,6 @@ watch(
 </script>
 
 <style scoped>
-/* Animaciones personalizadas */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -746,7 +982,6 @@ watch(
   opacity: 0;
 }
 
-/* Scrollbar personalizado */
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
 }
