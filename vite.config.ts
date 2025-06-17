@@ -1,19 +1,22 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), 
-    tailwindcss()
-  ],
+  plugins: [vue(), tailwindcss()],
+
   server: {
-    host: true, // Allow connections from all hosts
+    host: true,
     allowedHosts: [
-      'localhost',
-      '43aa-167-0-100-7.ngrok-free.app',
-      '*.ngrok-free.app',
+      "localhost",
+      // 'b43c-2a09-bac5-26fc-aa-00-11-1be.ngrok-free.app',
+      // '*.ngrok-free.app',
     ],
-  }
-  
-})
+  },
+  resolve: {
+    alias: {
+      "@": "/src",
+    },
+  },
+});
