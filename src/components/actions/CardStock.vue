@@ -92,6 +92,10 @@
       </div>
     </div>
 
+    <div>
+      <p class="text-center">📅 {{ formatDate(stock?.time) }}</p>
+    </div>
+
     <!-- Reason -->
     <div v-if="stock?.reason" class="mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
       <p class="text-sm text-blue-800">
