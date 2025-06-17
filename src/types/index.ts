@@ -27,6 +27,7 @@ export interface Stock {
 
 export interface StockResponse {
   stocks: Stock[]
+  items: Stock[]
   recommendations: Recommendation[]
 }
 
@@ -59,7 +60,7 @@ export interface Recommendation {
 
 export interface Metrics {
   title: string;
-  value: number;
+  value: string;
   icon: string;
   backgroundColor: string;
   iconBackground: string;

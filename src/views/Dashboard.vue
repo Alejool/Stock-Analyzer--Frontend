@@ -112,7 +112,7 @@
           <CardStock 
             :stock="stock"
             :index="index"
-            v-bind="stock"
+            v-bind="stocks"
           />
           </div>
         </div>
@@ -138,58 +138,7 @@
           <p class="text-gray-600">Insights y tendencias del mercado actualizados constantemente</p>
         </div>
         
-        <!-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
        
-          <div class="relative bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center border border-orange-200 hover:shadow-lg transition-all duration-300">
-            <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-            <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span class="text-white text-2xl">📊</span>
-            </div>
-            <div class="text-3xl font-bold text-gray-800 mb-2">{{ metrics?.totalStocks }}</div>
-            <div class="text-sm font-medium text-gray-600">Acciones Analizadas</div>
-            <div class="text-xs text-orange-600 mt-1">+ {{ metrics?.totalStocks }} esta semana</div>
-          </div>
-          
-          
-          <div class="relative bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center border border-green-200 hover:shadow-lg transition-all duration-300">
-            <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span class="text-white text-2xl">📈</span>
-            </div>
-            <div class="text-3xl font-bold text-gray-800 mb-2">{{ metrics?.buyRecommendations }}</div>
-            <div class="text-sm font-medium text-gray-600">Recomendaciones BUY</div>
-          </div>
-          
- 
-          <div class="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 text-center border border-blue-200 hover:shadow-lg transition-all duration-300">
-            <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span class="text-white text-2xl">🏢</span>
-            </div>
-            <div class="text-3xl font-bold text-gray-800 mb-2">{{ metrics?.totalBrokerages }}</div>
-            <div class="text-sm font-medium text-gray-600">Brokerages Activos</div>
-            <div class="text-xs text-blue-600 mt-1">Cobertura global</div>
-          </div>
-          
-          
-          <div class="relative bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center border border-purple-200 hover:shadow-lg transition-all duration-300">
-            <div class="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span class="text-white text-2xl">🕒</span>
-            </div>
-            <div class="text-3xl font-bold text-gray-800 mb-2">
-              {{ new Date(metrics?.lastUpdate).toLocaleDateString('es-ES', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              }) }}
-            </div>
-            <div class="text-sm font-medium text-gray-600">Última Actualización</div>
-            <div class="text-xs text-purple-600 mt-1">Datos en vivo</div>
-          </div>
-      </div> -->
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <template v-if="metrics && Object.keys(metrics).length > 0">
@@ -230,8 +179,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Stock, } from '../types/dashboard'
-import { Metrics } from '../types'
+import { Metrics, Stock } from '../types'
 import { useStockStore,  } from '../stores/stockStore'
 import CardStock from '../components/actions/CardStock.vue'
 import SectionSubHeader from '../components/sectionsCommon/SectionSubHeader.vue'
@@ -241,8 +189,8 @@ import CardMetric from '../components/card/CardMetric.vue'
 const stockStore = useStockStore()
 const { stocks, recommendations, filters } = storeToRefs(stockStore)
 
-const topStocks = ref([])
-const lowStocks = ref([])
+const topStocks = ref<Stock[]>([])
+const lowStocks = ref<Stock[]>([])
 const topRecommendation = ref({})
 // const metrics = ref<Metrics>({
 //   totalStocks: 0,
@@ -271,13 +219,13 @@ onMounted(async () => {
     filters.value.confidence = 'desc'
     filters.value.order = 'desc'
     await stockStore.fetchStocks()
-    topStocks.value = stocks.value
+    topStocks.value = stocks.value.slice(0, 3)
 
 
     filters.value.confidence = 'asc'
     filters.value.order = 'asc'
     await stockStore.fetchStocks()
-    lowStocks.value = stocks.value
+    lowStocks.value = stocks.value.slice(0, 3)
 
 
     await stockStore.fetchRecommendations()
@@ -287,7 +235,7 @@ onMounted(async () => {
     metrics.value = [
       {
         title: "Acciones Analizadas",
-        value: stocks.value[0]?.total_register || 0,
+        value: String(stocks.value[0]?.total_register || 0),
         icon: "📊",
         backgroundColor: "from-orange-50 to-orange-100",
         iconBackground: "from-orange-500 to-orange-600",
@@ -298,7 +246,7 @@ onMounted(async () => {
       },
       {
         title: "Recomendaciones BUY",
-        value: stocks.value[0]?.buy_count || 0,
+        value: String(stocks.value[0]?.buy_count || 0),
         icon: "📈",
         backgroundColor: "from-green-50 to-green-100",
         iconBackground: "from-green-500 to-green-600",
@@ -309,7 +257,7 @@ onMounted(async () => {
       },
       {
         title: "Brokerages Activos",
-        value: stocks.value[0]?.total_brokerages || 0,
+        value: String(stocks.value[0]?.total_brokerages || 0),
         icon: "🏢",
         backgroundColor: "from-blue-50 to-blue-100",
         iconBackground: "from-blue-500 to-blue-600",
@@ -320,7 +268,7 @@ onMounted(async () => {
       },
       {
         title: "Última Actualización",
-        value: stocks.value[0]?.last_update || 'No se ha actualizado',
+        value: String(stocks.value[0]?.last_update || 'No se ha actualizado'),
         icon: "🕒",
         backgroundColor: "from-purple-50 to-purple-100",
         iconBackground: "from-purple-500 to-purple-600",

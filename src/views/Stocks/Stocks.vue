@@ -271,14 +271,15 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, nextTick, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
-import { Stock, Metrics } from "../../types/dashboard";
 import { useStockStore } from "../../stores/stockStore";
 import CardStock from "../../components/actions/CardStock.vue";
 import SectionSubHeader from '../../components/sectionsCommon/SectionSubHeader.vue'
 import CardMetric from '../../components/card/CardMetric.vue'
 
 const stockStore = useStockStore();
-const { stocks, carouselFilteredStocks, filters: filtersStore } = storeToRefs(stockStore);
+const { stocks, filters: filtersStore } = storeToRefs(stockStore);
+
+
 
 // Referencias del carrusel
 const carousel = ref(null);
@@ -307,7 +308,7 @@ const uniqueBrokerages = computed(() => {
 
 const filteredStocks = computed(() => {
   let filtered = stocks.value;
-  let filteredInitial = stocks.value;
+  // let filteredInitial = stocks.value;
   
 
   // (filterPage) ? filtered= filteredInitial : filtered = filtered.slice(0,20)
@@ -339,7 +340,7 @@ const filteredStocks = computed(() => {
   }
 
    if (filters.value.quantity!='all'){
-    filtered= filtered.slice(0,filters.value.quantity)
+filtered = filtered.slice(0, Number(filters.value.quantity))
     // filters.value.initial = filtered.length <= 20;
   }
 
@@ -429,7 +430,7 @@ const clearFilters = () => {
 };
 
 
-const autoPlay = ref(null);
+const autoPlay = ref(0);
 
 const startAutoPlay = () => {
   autoPlay.value = setInterval(() => {
@@ -444,7 +445,7 @@ const startAutoPlay = () => {
 const stopAutoPlay = () => {
   if (autoPlay.value) {
     clearInterval(autoPlay.value);
-    autoPlay.value = null;
+    autoPlay.value = 0;
   }
 };
 
