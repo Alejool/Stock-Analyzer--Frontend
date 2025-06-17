@@ -15,9 +15,9 @@
     
     <!-- Valor de la métrica -->
     <div class="text-3xl font-bold text-gray-800 mb-2">
-      {{ typeof value === 'string' && !isNaN(Date.parse(value)) 
-         ? new Date(value).toLocaleDateString() 
-         : value }}
+      {{ typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/) 
+        ? new Date(value).toLocaleDateString() 
+        : value }}
     </div>
     
     <!-- Descripción -->
