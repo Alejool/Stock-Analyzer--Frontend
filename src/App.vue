@@ -16,9 +16,10 @@
               <router-link
                 to="/"
                 class="text-white/80 hover:text-white transition-colors duration-200"
-              >
+              > 
                 <span class="text-3xl">📈</span>
-                <span class="hidden sm:inline">Stock Analyzer</span>
+                <!-- <span class="hidden sm:inline">%VITE_APP_TITLE%</span> -->
+                <span class="hidden sm:inline">Stock Market</span>
                 <span class="sm:hidden">Stock </span>
               </router-link>
             </h1>
