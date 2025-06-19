@@ -1,5 +1,5 @@
 
-// src/types/index.ts
+
 export interface Stock {
   id: number
   ticker: string
@@ -38,10 +38,11 @@ export interface StockFilters {
   action?: string
   rating?: string
   sort_by?: string
-  order?: 'asc' | 'desc'
+  order?: 'ASC' | 'DESC'
   page?: number
   limit?: number
   confidence?: string
+  today?: string
 }
 
 export interface Recommendation {

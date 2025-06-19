@@ -1,8 +1,9 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '../views/Dashboard.vue'
-import RecommendationCard from '../components/RecommendationCard.vue'
 import Analytics from '../views/Analytics.vue'
 import Stocks from '../views/Stocks/Stocks.vue'
+import StockDetail from '../views/Stocks/StockDetail.vue'
+import NotFoundPage from '../views/NotFoundPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,20 +14,24 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/analytics',
+      path: '/Stock/:id',
+      name: 'Stock',
+      component: StockDetail,
+      props: true
+    },
+    {
+      path: '/analytics/',
       name: 'analytics',
-      component: Analytics
+      component: Analytics,
+
     },
     {
       path: '/Stocks',
       name: 'Stocks',
-      component: Stocks
+      component: Stocks,
     },
-    {
-      path: '/recommendations',
-      name: 'recommendations',
-      component:RecommendationCard
-    }
+   
+    { path: '/:catchAll(.*)', component: NotFoundPage }
   ]
 })
 
