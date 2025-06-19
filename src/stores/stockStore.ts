@@ -9,12 +9,16 @@ export interface CarouselFilters {
   minScore: number
   search: string
   onlyHighConfidence: boolean
-  initial:boolean
+  initial: boolean
 }
 
 export const useStockStore = defineStore('stock', () => {
   // State
   const stocks = ref<Stock[]>([])
+  const stockTrazabilidad = ref<{ [key: string]: Stock[] }>({});
+
+  console.log('stockTrazabilidad');
+  console.log(stockTrazabilidad.value);
   const recommendations = ref<Recommendation[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -22,8 +26,9 @@ export const useStockStore = defineStore('stock', () => {
     page: 1,
     limit: -1,
     sort_by: 'confidence',
-    order: 'desc',
+    order: 'DESC',
     confidence: 'DESC',
+    today: 'true'
   })
 
   // Carousel specific state
@@ -33,7 +38,7 @@ export const useStockStore = defineStore('stock', () => {
     minScore: 0,
     search: '',
     onlyHighConfidence: false,
-    initial:true
+    initial: true
   })
 
   const currentSlide = ref(0)
@@ -123,8 +128,8 @@ export const useStockStore = defineStore('stock', () => {
 
   const topRatedStocks = computed(() => {
     return stocks.value
-      .filter(stock => ['Buy', 'Strong Buy', 'Outperform'].includes(stock.rating_to))
-      .slice(0, 5)
+      .filter(stock => ['Buy', 'Strong Buy'].includes(stock.rating_to))
+      .slice(0, 3)
   })
 
   // Actions
@@ -137,8 +142,41 @@ export const useStockStore = defineStore('stock', () => {
         filters.value = { ...filters.value, ...newFilters }
       }
 
-      const response = await stockAPI.getStocks(filters.value)
-      stocks.value = response.items
+      const response = await stockAPI.getStocks(filters.value);
+
+      stocks.value = response.items.reduce((acc: Stock[], current: Stock) => {
+        const existingIndex = acc.findIndex(item =>
+          item.ticker === current.ticker &&
+          item.company === current.company
+        );
+
+        if (existingIndex >= 0) {
+          // Create traceability key using the stock identifier
+          const traceKey = `${current.ticker}-${current.company}`;
+
+          if (new Date(current.time) > new Date(acc[existingIndex].time)) {
+            // Store the old version in traceability before updating
+            if (!stockTrazabilidad.value[traceKey]) {
+              stockTrazabilidad.value[traceKey] = [];
+            }
+            stockTrazabilidad.value[traceKey].push(acc[existingIndex]);
+
+            // Update with new version
+            acc[existingIndex] = current;
+          } else {
+            // Store the newer version in traceability
+            if (!stockTrazabilidad.value[traceKey]) {
+              stockTrazabilidad.value[traceKey] = [];
+            }
+            stockTrazabilidad.value[traceKey].push(current);
+          }
+        } else {
+          acc.push(current);
+        }
+
+        return acc;
+      }, []);
+
     } catch (err) {
       console.log('error: ', err)
       error.value = err instanceof Error ? err.message : 'Error desconocido'
@@ -187,7 +225,7 @@ export const useStockStore = defineStore('stock', () => {
       minScore: 0,
       search: '',
       onlyHighConfidence: false,
-      initial:true
+      initial: true
     }
     currentSlide.value = 0
   }
