@@ -23,7 +23,7 @@ class StockAPI {
 
   async getStocks(filters: StockFilters): Promise<StockResponse> {
     const params = new URLSearchParams()
-    
+
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '') {
         params.append(key, value.toString())
@@ -39,7 +39,7 @@ class StockAPI {
   }
 
   async healthCheck(): Promise<{ status: string; message: string }> {
-    return this.request<{ status: string; message: string }>(`${RAIZ}/health`) 
+    return this.request<{ status: string; message: string }>(`${RAIZ}/health`)
   }
 }
 
