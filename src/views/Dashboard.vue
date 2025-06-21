@@ -38,13 +38,14 @@
 
       <div class="text-center mt-6 mb-4 text-white/70">
         <p>
-          <span class="font-bold text-4xl">{{ topRecommendation?.confidence ? topRecommendation.confidence * 100 : 0 }}
+          <span class="font-bold text-4xl">
+            {{ topRecommendation?.confidence ? 
+              (topRecommendation.confidence * 100).toFixed(2) : '0.00'
+            }}
             %</span>
           de confianza en la recomendación
         </p>
       </div>
-
-
     </div>
 
 
@@ -98,20 +99,6 @@
             :extraInfo="metric.extraInfo" :borderColor="metric.borderColor" :extraInfoColor="metric.extraInfoColor"
             :pulseColor="metric.pulseColor" />
         </div>
-
-        <!-- Call to Action Final -->
-        <!-- <div class="mt-8 text-center bg-gradient-to-r from-orange-500 to-purple-600 rounded-xl p-5 text-white">
-          <h3 class="text-xl font-bold mb-4">¿Listo para invertir inteligentemente?</h3>
-          <p class="text-white/90 mb-6">Únete a miles de inversores que ya confían en nuestro algoritmo de IA</p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button class="bg-white text-purple-600 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-all duration-200">
-              🚀 Comenzar Ahora
-            </button>
-            <button class="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-purple-600 transition-all duration-200">
-              📞 Hablar con Experto
-            </button>
-          </div>      
-        </div> -->
       </div>
     </div>
   </div>
@@ -120,7 +107,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import  { Metrics, Stock, type Recommendation } from '../types'
+import type { Metrics, Stock, Recommendation } from '../types'
 import { useStockStore } from '../stores/stockStore'
 import CardStock from '../components/actions/CardStock.vue'
 import SectionSubHeader from '../components/sectionsCommon/SectionSubHeader.vue'
