@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <!-- <div class="absolute -top-3 -left-3 w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
       {{ index + 1 }}
     </div> -->
@@ -18,12 +18,10 @@
       <h3 class="text-4xl font-bold text-gray-900">
         {{ stock?.ticker || "-" }}
       </h3>
-      <span
-        :class="[
-          'px-3 py-1.5 rounded-lg text-xs font-medium border',
-          getRatingColor(stock?.current_rating || stock?.rating_to)
-        ]"
-      >
+      <span :class="[
+        'px-3 py-1.5 rounded-lg text-xs font-medium border',
+        getRatingColor(stock?.current_rating || stock?.rating_to)
+      ]">
         {{ stock?.current_rating || stock?.rating_to || "-" }}
       </span>
     </div>
@@ -49,11 +47,8 @@
         </span>
       </div>
       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-        <div 
-          class="h-2 rounded-full transition-all duration-300"
-          :class="getConfidenceBarColor(stock?.confidence)"
-          :style="{ width: `${(stock?.confidence || 0) * 100}%` }"
-        ></div>
+        <div class="h-2 rounded-full transition-all duration-300" :class="getConfidenceBarColor(stock?.confidence)"
+          :style="{ width: `${(stock?.confidence || 0) * 100}%` }"></div>
       </div>
     </div>
 
@@ -83,7 +78,7 @@
     <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl mb-6">
       <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
         <span class="text-gray-400">🎯</span>
-        Cambio Precio 
+        Cambio Precio
       </span>
       <div class="flex items-center gap-2 text-sm font-semibold">
         <span class="text-gray-500">{{ stock?.target_from || "-" }}</span>
@@ -103,27 +98,18 @@
       </p>
     </div>
 
-    <!-- Timestamp -->
-    <!-- <div class="mb-6">
-      <div class="flex items-center justify-between text-xs text-gray-500">
-        <div class="flex items-center gap-2">
-          <span>📅</span>
-          <span>{{ formatDate(stock?.time) }}</span>
-        </div>
-        <div class="text-right">
-          <div>Creado: {{ formatDate(stock?.created_at) }}</div>
-          <div>Actualizado: {{ formatDate(stock?.updated_at) }}</div>
-        </div>
-      </div>
-    </div> -->
-
+  
     <!-- Action Button -->
-    <!-- <router-link
+    <router-link
       to="/stocks"
-      class="block bg-gray-900 text-white px-6 py-3 rounded-xl font-medium text-center text-sm hover:bg-gray-800 transition-colors duration-200"
+      class="block mt-8
+       bg-gray-900 text-white 
+       px-6 py-3 rounded-xl font-medium 
+       text-center text-sm hover:bg-gray-800 
+       transition-colors duration-200"
     >
       Agregar a waitlist
-    </router-link> -->
+    </router-link>
   </div>
 </template>
 
@@ -143,7 +129,9 @@ defineProps({
 
 const formatDate = (dateString) => {
   if (!dateString) return '-';
-  return new Date(dateString).toLocaleString('es-ES', {
+  const date = new Date(dateString);
+  // Use browser's local timezone instead of fixed timezone
+  return date.toLocaleString(navigator.language, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -154,7 +142,7 @@ const formatDate = (dateString) => {
 
 const getRatingColor = (rating) => {
   if (!rating) return 'bg-gray-50 text-gray-700 border-gray-200';
-  
+
   switch (rating.toLowerCase()) {
     case 'buy':
       return 'bg-green-50 text-green-700 border-green-200';
