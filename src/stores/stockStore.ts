@@ -17,8 +17,6 @@ export const useStockStore = defineStore('stock', () => {
   const stocks = ref<Stock[]>([])
   const stockTrazabilidad = ref<{ [key: string]: Stock[] }>({});
 
-  console.log('stockTrazabilidad');
-  console.log(stockTrazabilidad.value);
   const recommendations = ref<Recommendation[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -207,7 +205,7 @@ export const useStockStore = defineStore('stock', () => {
       page: 1,
       limit: 50,
       sort_by: 'time',
-      order: 'desc'
+      order: 'DESC'
     }
     fetchStocks()
   }
