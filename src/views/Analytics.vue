@@ -3,58 +3,25 @@
     <!-- Header Section -->
     <sectionSubHeader />
 
-    <div class="mb-8">
+     <div class="mb-8">
       <!-- Summary Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <CardMetric
-          title="Total Ratings"
-          :value="analytics.totalRatings"
-          backgroundColor="from-blue-50 to-blue-100"
-          textColor="text-blue-600"
-          labelColor="text-blue-700"
-          borderColor="border-blue-200"
-          iconBackground="bg-blue-500"
-          icon="📈"
-        />
-
-        <CardMetric
-          title="Brokerages Activos"
-          :value="analytics?.totalBrokerages"
-          backgroundColor="from-purple-50 to-purple-100"
-          textColor="text-purple-600"
-          labelColor="text-purple-700"
-          borderColor="border-purple-200"
-          iconBackground="bg-purple-500"
-          icon="🏢"
-        />
-
-        <CardMetric
-          title="Score Promedio"
-          :value="analytics?.avgScore.toFixed(1)"
-          backgroundColor="from-green-50 to-green-100"
-          textColor="text-green-600"
-          labelColor="text-green-700"
-          borderColor="border-green-200"
-          iconBackground="bg-green-500"
-          icon="💹"
-        />
-
-        <CardMetric
-          title="Cambio Target Prom."
-          :value="`${
-            analytics.avgTargetChange > 0 ? '+' : ''
-          }${analytics.avgTargetChange.toFixed(1)}%`"
-          backgroundColor="from-amber-50 to-amber-100"
-          textColor="text-amber-600"
-          labelColor="text-amber-700"
-          borderColor="border-amber-200"
-          iconBackground="bg-amber-500"
-          icon="🎯"
+          v-for="metric in metricsArray"
+          :key="metric.title"
+          :title="metric.title"
+          :value="metric.value"
+          :backgroundColor="metric.backgroundColor"
+          :textColor="metric.textColor"
+          :labelColor="metric.labelColor"
+          :borderColor="metric.borderColor"
+          :iconBackground="metric.iconBackground"
+          :icon="metric.icon"
         />
       </div>
     </div>
 
-    <div class="flex justify-end items-center space-x-4 w-full my-5">
+    <!-- <div class="flex justify-end items-center space-x-4 w-full my-5">
       <div
         class="bg-green-700 text-white px-6 py-2 rounded-lg text-sm font-bold"
       >
@@ -63,7 +30,7 @@
       <div class="text-gray-900/80 text-sm font-bold">
         {{ currentTime }}
       </div>
-    </div>
+    </div> -->
 
     <!-- Filters Section  -->
     <div
@@ -272,6 +239,10 @@
           </div>
 
           <div class="space-y-3 h-[300px] overflow-y-auto">
+            <div v-if="topPerformers.length === 0" class="text-center">
+              <p class="text-gray-600">No hay datos disponibles</p>
+            </div>
+
             <div
               v-for="(company, index) in topPerformers"
               :key="company.ticker"
@@ -288,10 +259,10 @@
                 </div>
                 <div>
                   <div class="font-bold text-gray-900 text-base">
-                    {{ company.ticker }}
+                    {{ company?.ticker }}
                   </div>
                   <div class="text-xs text-gray-600 truncate max-w-32">
-                    {{ company.company }}
+                    {{ company?.company }}
                   </div>
                 </div>
               </div>
@@ -300,17 +271,17 @@
                   :class="getScoreColorClass(company.score)"
                   class="text-lg font-bold"
                 >
-                  {{ company.score }}
+                  {{ company?.score }}
                 </div>
                 <div
                   :class="
-                    company.targetChange >= 0
+                    company?.targetChange >= 0
                       ? 'text-green-600'
                       : 'text-red-600'
                   "
                   class="text-sm font-semibold"
                 >
-                  {{ company.targetChange > 0 ? "+" : ""
+                  {{ company?.targetChange > 0 ? "+" : ""
                   }}{{ company.targetChange.toFixed(1) }}%
                 </div>
               </div>
@@ -340,19 +311,23 @@
           </div>
 
           <div class="space-y-2 h-[300px] overflow-y-auto">
+            <div v-if="brokerageAnalysis.length === 0" class="text-center">
+              <p class="text-gray-600">No hay datos disponibles</p>
+            </div>
+
             <div
               v-for="brokerage in brokerageAnalysis"
-              :key="brokerage.name"
+              :key="brokerage?.name"
               class="group/item border-2 border-slate-200 rounded-2xl p-4 hover:border-purple-300 hover:shadow-lg transition-all duration-300 bg-white/60"
             >
               <div class="flex justify-between items-start mb-2">
                 <h2 class="font-bold text-gray-900 text-xs">
-                  {{ brokerage.name }}
+                  {{ brokerage?.name }}
                 </h2>
                 <span
                   class="text-xs bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 px-3 py-1 rounded-full font-semibold border border-purple-200"
                 >
-                  {{ brokerage.count }} acciones
+                  {{ brokerage?.count }} acciones
                 </span>
               </div>
               <div class="grid grid-cols-2 gap-4 text-sm">
@@ -366,13 +341,13 @@
                   <span class="text-gray-600">Target:</span>
                   <span
                     :class="
-                      brokerage.avgTargetChange >= 0
+                      brokerage?.avgTargetChange >= 0
                         ? 'text-green-600'
                         : 'text-red-600'
                     "
                     class="font-bold ml-1"
                   >
-                    {{ brokerage.avgTargetChange > 0 ? "+" : ""
+                    {{ brokerage?.avgTargetChange > 0 ? "+" : ""
                     }}{{ brokerage.avgTargetChange.toFixed(1) }}%
                   </span>
                 </div>
@@ -494,42 +469,49 @@
           </div>
 
           <div class="">
-            <div
-              v-for="(action, index) in actionsDistribution"
-              :key="action.name"
-              class="group/item flex items-center justify-between p-4 rounded-2xl hover:bg-white transition-all duration-300"
-            >
-              <div class="flex items-center space-x-2">
-                <div
-                  :class="getActionColor(action.name)"
-                  class="w-4 h-4 rounded-full shadow-sm group-hover/item:scale-110 transition-transform duration-300"
-                ></div>
-                <span class="text-sm font-semibold text-gray-700">{{
-                  action.name
-                }}</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span
-                  class="text-sm font-bold text-gray-600 min-w-[2rem] text-right"
-                  >{{ action.count }}</span
-                >
-                <div
-                  class="w-24 bg-gray-200 rounded-full h-2.5 overflow-hidden"
-                >
+            <div v-if="actionsDistribution.length === 0" class="text-center">
+              <p class="text-gray-600">No hay datos disponibles</p>
+            </div>
+
+            <div v-if="actionsDistribution.length > 0">
+              <div
+                v-for="(action, index) in actionsDistribution"
+                :key="action?.name"
+                class="group/item flex items-center justify-between p-4 rounded-2xl hover:bg-white transition-all duration-300"
+              >
+                <div class="flex items-center space-x-2">
                   <div
                     :class="getActionColor(action.name)"
-                    :style="{
-                      width: (action.count / filteredData.length) * 100 + '%',
-                    }"
-                    class="h-full rounded-full transition-all duration-700 ease-out"
+                    class="w-4 h-4 rounded-full shadow-sm group-hover/item:scale-110 transition-transform duration-300"
                   ></div>
+                  <span class="text-sm font-semibold text-gray-700">{{
+                    action?.name
+                  }}</span>
                 </div>
-                <span
-                  class="text-sm font-medium text-gray-500 min-w-[3rem] text-right"
-                  >{{
-                    ((action.count / filteredData.length) * 100).toFixed(1)
-                  }}%</span
-                >
+                <div class="flex items-center space-x-2">
+                  <span
+                    class="text-sm font-bold text-gray-600 min-w-[2rem] text-right"
+                    >{{ action?.count }}</span
+                  >
+                  <div
+                    class="w-24 bg-gray-200 rounded-full h-2.5 overflow-hidden"
+                  >
+                    <div
+                      :class="getActionColor(action.name)"
+                      :style="{
+                        width:
+                          (action?.count / filteredData.length) * 100 + '%',
+                      }"
+                      class="h-full rounded-full transition-all duration-700 ease-out"
+                    ></div>
+                  </div>
+                  <span
+                    class="text-sm font-medium text-gray-500 min-w-[3rem] text-right"
+                    >{{
+                      ((action?.count / filteredData.length) * 100).toFixed(1)
+                    }}%</span
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -569,7 +551,7 @@
                     class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
                   ></div>
                   <span class="text-2xl font-bold text-green-600">{{
-                    targetChangesStats.increases
+                    targetChangesStats?.increases
                   }}</span>
                 </div>
               </div>
@@ -587,7 +569,7 @@
                     class="w-2 h-2 bg-red-500 rounded-full animate-pulse"
                   ></div>
                   <span class="text-2xl font-bold text-red-600">{{
-                    targetChangesStats.decreases
+                    targetChangesStats?.decreases
                   }}</span>
                 </div>
               </div>
@@ -605,8 +587,12 @@
                     class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
                   ></div>
                   <span class="text-2xl font-bold text-blue-600">
-                    {{ targetChangesStats.average > 0 ? "+" : ""
-                    }}{{ targetChangesStats.average.toFixed(2) }}%
+                    {{ targetChangesStats?.average > 0 ? "+" : ""
+                    }}{{
+                      targetChangesStats?.average > 0
+                        ? targetChangesStats?.average.toFixed(2)
+                        : "0"
+                    }}%
                   </span>
                 </div>
               </div>
@@ -622,51 +608,59 @@
         ⏰ Actividad Reciente
       </h3>
       <div class="space-y-4 max-h-96 overflow-y-auto">
-        <div
-          v-for="item in recentActivity"
-          :key="item.id"
-          class="flex items-start space-x-4 p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <div class="flex-shrink-0 text-xs text-gray-500 w-16">
-            {{ formatDate(item.time) }}
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center space-x-2 mb-2">
-              <span class="font-semibold text-gray-900">{{ item.ticker }}</span>
-              <span
-                :class="getActionBadgeClass(item.action)"
-                class="px-2 py-1 text-xs rounded-full"
-              >
-                {{ item.action }}
-              </span>
-              <span class="text-xs text-gray-500">{{ item.brokerage }}</span>
+        <div v-if="recentActivity.length === 0" class="text-center">
+          <p class="text-gray-600">No hay datos disponibles</p>
+        </div>
+
+        <div v-if="recentActivity.length > 0">
+          <div
+            v-for="item in recentActivity"
+            :key="item.id"
+            class="flex items-start space-x-4 p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <div class="flex-shrink-0 text-xs text-gray-500 w-16">
+              {{ formatDate(item?.time) }}
             </div>
-            <div class="text-sm text-gray-600 mb-1">{{ item.company }}</div>
-            <div class="flex items-center space-x-2 text-xs">
-              <span class="text-gray-500">{{ item.target_from }}</span>
-              <span class="text-gray-400">→</span>
-              <span
-                class="font-medium"
-                :class="
-                  calculateTargetChange(item) >= 0
-                    ? 'text-green-600'
-                    : 'text-red-600'
-                "
-              >
-                {{ item.target_to }}
-              </span>
-              <span class="text-gray-400">
-                ({{ calculateTargetChange(item) > 0 ? "+" : ""
-                }}{{ calculateTargetChange(item).toFixed(1) }}%)
-              </span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center space-x-2 mb-2">
+                <span class="font-semibold text-gray-900">{{
+                  item.ticker
+                }}</span>
+                <span
+                  :class="getActionBadgeClass(item?.action)"
+                  class="px-2 py-1 text-xs rounded-full"
+                >
+                  {{ item?.action }}
+                </span>
+                <span class="text-xs text-gray-500">{{ item?.brokerage }}</span>
+              </div>
+              <div class="text-sm text-gray-600 mb-1">{{ item?.company }}</div>
+              <div class="flex items-center space-x-2 text-xs">
+                <span class="text-gray-500">{{ item?.target_from }}</span>
+                <span class="text-gray-400">→</span>
+                <span
+                  class="font-medium"
+                  :class="
+                    calculateTargetChange(item) >= 0
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  "
+                >
+                  {{ item.target_to }}
+                </span>
+                <span class="text-gray-400">
+                  ({{ calculateTargetChange(item) > 0 ? "+" : ""
+                  }}{{ calculateTargetChange(item).toFixed(1) }}%)
+                </span>
+              </div>
             </div>
-          </div>
-          <div class="flex-shrink-0">
-            <div
-              :class="getScoreColorClass(item.score)"
-              class="text-sm font-bold"
-            >
-              {{ item.score }}
+            <div class="flex-shrink-0">
+              <div
+                :class="getScoreColorClass(item.score)"
+                class="text-sm font-bold"
+              >
+                {{ item.score }}
+              </div>
             </div>
           </div>
         </div>
@@ -674,62 +668,53 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { computed, reactive, watch, ref, onMounted } from "vue";
+    
+<script setup lang="ts">
+import { computed, reactive, watch, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
+import type { Stock } from "../types";
 import { useStockStore } from "../stores/stockStore";
 import { useAnalyticsStore } from "../stores/analytics";
-
-// Components
 import sectionSubHeader from "../components/sectionsCommon/sectionSubHeader.vue";
 import CardMetric from "../components/card/CardMetric.vue";
 const stockStore = useStockStore();
-const analyticsStore = useAnalyticsStore();
+const analyticsStore = useAnalyticsStore();   
 
 // Stores
 const { stocks, filters: filtersStore } = storeToRefs(stockStore);
 const { data } = storeToRefs(analyticsStore);
 
-// Reactive filters
 const filters = reactive({
   brokerage: "",
   action: "",
   scoreRange: "",
-  dateFrom: "",
+  dateFrom: new Date(new Date().setDate(new Date().getDate()))
+    .toISOString()
+    .split("T")[0],
   dateTo: "",
 });
 
-// Add this to the existing script setup section:
-const currentTime = ref(new Date().toLocaleString("es-ES"));
-
-// Update time every second
-
-const timer = setInterval(() => {
-  currentTime.value = new Date().toLocaleString("es-ES");
-}, 1000);
-
 // Computed properties
 const filteredData = computed(() => {
-  let data = [...analyticsStore.data];
+  let datai = data?.value ? [...data.value] : [];
 
   if (filters.brokerage) {
-    data = data.filter((item) => item.brokerage === filters.brokerage);
+    datai = datai.filter((item) => item.brokerage === filters.brokerage);
   }
 
   if (filters.action) {
-    data = data.filter((item) => item.action === filters.action);
+    datai = datai.filter((item) => item.action === filters.action);
   }
 
   if (filters.scoreRange) {
-    data = data.filter((item) => {
+    datai = datai.filter((item) => {
       switch (filters.scoreRange) {
         case "high":
-          return item.score >= 70;
+          return (item.score ?? 0) >= 70;
         case "medium":
-          return item.score >= 50 && item.score < 70;
+          return (item.score ?? 0) >= 50 && (item.score ?? 0) < 70;
         case "low":
-          return item.score < 50;
+          return (item.score ?? 0) < 50;
         default:
           return true;
       }
@@ -737,12 +722,22 @@ const filteredData = computed(() => {
   }
 
   if (filters.dateFrom) {
-    data = data.filter(
-      (item) => new Date(item.time) >= new Date(filters.dateFrom)
-    );
+    // console.log('Filter date:', filters.dateFrom);
+    // console.log('First item date:', datai[0]?.time);
+    datai = datai.filter((item) => {
+      const date = new Date(item.time);
+      const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      const itemDate = localDate.toISOString().slice(0, 10);
+
+      return itemDate === filters.dateFrom;
+
+      // return new Date(item.time).toDateString() === new Date(filters.dateFrom).toDateString();
+    });
   }
 
-  return data;
+  return datai;
 });
 
 const analytics = computed(() => {
@@ -755,11 +750,10 @@ const analytics = computed(() => {
       avgTargetChange: 0,
     };
   }
-
   const totalRatings = data.length;
-  const uniqueBrokerages = new Set(data.map((item) => item.brokerage)).size;
+  const uniqueBrokerages = data ? new Set(data.map((item) => item.brokerage)).size : 0;
   const avgScore =
-    data.reduce((sum, item) => sum + item.score, 0) / totalRatings;
+    data.reduce((sum, item) => sum + (item?.score || 0), 0) / totalRatings;
 
   const targetChanges = data.map((item) => calculateTargetChange(item));
   const avgTargetChange =
@@ -774,45 +768,55 @@ const analytics = computed(() => {
   };
 });
 
-const uniqueBrokerages = computed(() => {
-  return [...new Set(analyticsStore.data.map((item) => item.brokerage))].sort();
-});
-
-const actionsDistribution = computed(() => {
-  const actions = {};
-  filteredData.value.forEach((item) => {
-    actions[item.action] = (actions[item.action] || 0) + 1;
-  });
-
-  return Object.entries(actions)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count);
-});
-
-const targetChangesStats = computed(() => {
-  const changes = filteredData.value.map((item) => calculateTargetChange(item));
-  const increases = changes.filter((change) => change > 0).length;
-  const decreases = changes.filter((change) => change < 0).length;
-  const average =
-    changes.reduce((sum, change) => sum + change, 0) / changes.length;
-
-  return { increases, decreases, average };
-});
-
-const topPerformers = computed(() => {
-  return filteredData.value
-    .map((item) => ({
-      ...item,
-      targetChange: calculateTargetChange(item),
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
-});
+const metricsArray = computed(() => [
+  {
+    title: "Total Ratings",
+    value: analytics.value?.totalRatings,
+    backgroundColor: "from-blue-50 to-blue-100",
+    textColor: "text-blue-600",
+    labelColor: "text-blue-700",
+    borderColor: "border-blue-200",
+    iconBackground: "bg-blue-500",
+    icon: "📈"
+  },
+  {
+    title: "Brokerages Activos",
+    value: analytics.value?.totalBrokerages,
+    backgroundColor: "from-purple-50 to-purple-100",
+    textColor: "text-purple-600",
+    labelColor: "text-purple-700",
+    borderColor: "border-purple-200",
+    iconBackground: "bg-purple-500",
+    icon: "🏢"
+  },
+  {
+    title: "Score Promedio",
+    value: analytics.value?.avgScore != null ? analytics.value.avgScore.toFixed(1) : '-',
+    backgroundColor: "from-green-50 to-green-100",
+    textColor: "text-green-600",
+    labelColor: "text-green-700",
+    borderColor: "border-green-200",
+    iconBackground: "bg-green-500",
+    icon: "💹"
+  },
+  {
+    title: "Cambio Target Prom.",
+    value: analytics.value?.avgTargetChange != null
+      ? `${analytics.value.avgTargetChange > 0 ? '+' : ''}${analytics.value.avgTargetChange.toFixed(1)}%`
+      : '-',
+    backgroundColor: "from-amber-50 to-amber-100",
+    textColor: "text-amber-600",
+    labelColor: "text-amber-700",
+    borderColor: "border-amber-200",
+    iconBackground: "bg-amber-500",
+    icon: "🎯"
+  }
+]);
 
 const brokerageAnalysis = computed(() => {
   const brokerageMap = new Map();
 
-  filteredData.value.forEach((item) => {
+  filteredData.value.forEach((item: Stock) => {
     if (!brokerageMap.has(item.brokerage)) {
       brokerageMap.set(item.brokerage, []);
     }
@@ -823,12 +827,19 @@ const brokerageAnalysis = computed(() => {
     .map(([name, items]) => ({
       name,
       count: items.length,
-      avgScore: items.reduce((sum, item) => sum + item.score, 0) / items.length,
-      avgTargetChange:
-        items.reduce((sum, item) => sum + calculateTargetChange(item), 0) /
+      avgScore:
+        items.reduce((sum: number, item: Stock) => sum + item.score, 0) /
         items.length,
+      avgTargetChange:
+        items.reduce(
+          (sum: number, item: Stock) => sum + calculateTargetChange(item),
+          0
+        ) / items.length,
       avgConfidence:
-        items.reduce((sum, item) => sum + item.confidence, 0) / items.length,
+        items.reduce(
+          (sum: number, item: Stock) => sum + item.confidence,
+          0
+        ) / items.length,
     }))
     .sort((a, b) => b.count - a.count);
 });
@@ -841,7 +852,7 @@ const feelingData = computed(() => {
     bearish = 0,
     neutral = 0;
 
-  filteredData.value.forEach((item) => {
+  filteredData.value.forEach((item: Stock) => {
     const targetChange = calculateTargetChange(item);
     if (targetChange > 2) bullish++;
     else if (targetChange < -2) bearish++;
@@ -879,26 +890,66 @@ const overallSentiment = computed(() => {
   }
 });
 
+const actionsDistribution = computed(() => {
+  const actions = <Record<string, number>>{};
+  filteredData.value.forEach((item: Stock) => {
+    actions[item.action] = (actions[item.action] || 0) + 1;
+  });
+
+  return Object.entries(actions)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => (b.count as number) - (a.count as number));
+});
+
+const targetChangesStats = computed(() => {
+  const changes = filteredData.value.map((item: Stock) =>
+    calculateTargetChange(item)
+  );
+  const increases = changes.filter((change) => change > 0).length;
+  const decreases = changes.filter((change) => change < 0).length;
+  const average =
+    changes.reduce((sum, change) => sum + change, 0) / changes.length;
+
+  return { increases, decreases, average };
+});
+
+const topPerformers = computed(() => {
+  return filteredData.value
+    .map((item: Stock) => ({
+      ...item,
+      targetChange: calculateTargetChange(item),
+    }))
+    .sort((a: Stock, b: Stock) => (b.score ?? 0) - (a.score ?? 0))
+    .slice(0, 5);
+});
+
 const recentActivity = computed(() => {
   return [...filteredData.value]
-    .sort((a, b) => new Date(b.time) - new Date(a.time))
+    .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
     .slice(0, 15);
 });
 
+const uniqueBrokerages = computed(() => {
+  return data?.value ? [...new Set(data.value.map((item) => item.brokerage))].sort() : [];
+});
+
 // Methods
-const calculateTargetChange = (item) => {
+const calculateTargetChange = (item: {
+  target_from: string;
+  target_to: string;
+}) => {
   const from = parseFloat(item.target_from.replace("$", ""));
   const to = parseFloat(item.target_to.replace("$", ""));
   return ((to - from) / from) * 100;
 };
 
-const getScoreColorClass = (score) => {
+const getScoreColorClass = (score: number) => {
   if (score >= 70) return "text-green-600";
   if (score >= 50) return "text-yellow-600";
   return "text-red-600";
 };
 
-const getActionColor = (action) => {
+const getActionColor = (action: string) => {
   if (action.includes("raised")) return "bg-green-500";
   if (action.includes("lowered")) return "bg-red-500";
   if (action.includes("upgraded")) return "bg-blue-500";
@@ -906,7 +957,7 @@ const getActionColor = (action) => {
   return "bg-gray-500";
 };
 
-const getActionBadgeClass = (action) => {
+const getActionBadgeClass = (action: string) => {
   if (action.includes("raised")) return "bg-green-100 text-green-800";
   if (action.includes("lowered")) return "bg-red-100 text-red-800";
   if (action.includes("upgraded")) return "bg-blue-100 text-blue-800";
@@ -914,7 +965,7 @@ const getActionBadgeClass = (action) => {
   return "bg-gray-100 text-gray-800";
 };
 
-const getRankingBadgeColor = (index) => {
+const getRankingBadgeColor = (index: number) => {
   switch (index) {
     case 0:
       return "bg-yellow-500";
@@ -927,8 +978,8 @@ const getRankingBadgeColor = (index) => {
   }
 };
 
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString("es-ES", {
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString(navigator.language, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -942,61 +993,31 @@ const applyFilters = () => {
 
 const clearFilters = () => {
   Object.keys(filters).forEach((key) => {
-    filters[key] = "";
+    (filters as { [key: string]: string })[key] = "";
   });
 };
 
 onMounted(async () => {
   try {
     filtersStore.value.limit = -1;
+    filtersStore.value.today = "no";
+    filtersStore.value.order = "DESC";
+    filtersStore.value.confidence = "DESC";
+
     await stockStore.fetchStocks();
+    await nextTick();
 
-    console.log(stocks.value);
-    console.log(data);
-    setTimeout(() => {
-      console.log(currentTime.value);
-    }, 1000);
-
-    data.value = stocks.value ?? { items: [] };
+    analyticsStore.setData(stocks?.value as Stock[]);
   } catch (error) {
     console.error("Error fetching stocks:", error);
   }
 });
 
 watch(
-  () => data.value,
+  () => data?.value,
   () => {
     console.log("Data updated in analytics");
   },
   { deep: true }
 );
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.overflow-y-auto::-webkit-scrollbar {
-  width: 6px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 10px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-</style>
