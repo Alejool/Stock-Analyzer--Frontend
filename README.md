@@ -1,123 +1,130 @@
-# Investment Dashboard - Vue 3
+# Stock Analyzer Frontend
 
-Un dashboard minimalista para análisis de inversiones construido con Vue 3, Tailwind CSS y una arquitectura de componentes modular.
+Un dashboard minimalista para análisis de inversiones construido con Vue 3, Tailwind CSS y una arquitectura de componentes modular. Esta aplicación frontend proporciona una interfaz intuitiva para visualizar recomendaciones de acciones, análisis y datos del mercado.
 
 ## 🚀 Características
 
 - **Diseño Minimalista**: Interfaz limpia y moderna con Tailwind CSS
 - **Arquitectura Modular**: Componentes reutilizables y bien organizados
-- **Testing Completo**: Suite de tests unitarios con Vitest
 - **Responsive**: Diseño adaptable a diferentes dispositivos
 - **Performance**: Optimizado para carga rápida
+- **Gestión de Estado**: Estado centralizado con stores de Pinia
+- **Datos en Tiempo Real**: Datos dinámicos de acciones y recomendaciones
+
+## 🛠️ Tecnologías Utilizadas
+
+### Framework Principal
+- **Vue 3**: Framework JavaScript progresivo con Composition API
+- **Vite**: Herramienta de build rápida y servidor de desarrollo
+
+### Estilos y UI
+- **Tailwind CSS**: Framework CSS utility-first
+
+### Gestión de Estado y Enrutamiento
+- **Pinia**: Librería de store para Vue para gestión de estado
+- **Vue Router**: Router oficial para aplicaciones Vue.js
 
 ## 📁 Estructura del Proyecto
 
 ```
 src/
 ├── components/
-│   ├── HeroSection.vue          # Sección principal del dashboard
-│   ├── FeaturedRecommendation.vue # Recomendación destacada
-│   ├── MetricCard.vue           # Tarjeta de métricas reutilizable
-│   ├── TopStocks.vue            # Lista de mejores acciones
-│   ├── StockCard.vue            # Tarjeta individual de acción
-│   ├── RatingBadge.vue          # Badge de calificación
-│   └── AnalyticsSection.vue     # Sección de análisis
+│   ├── CardMetric.vue           # Tarjeta para mostrar métricas
+│   ├── CardStock.vue            # Tarjeta de información de acciones
+│   ├── SectionSubHeader.vue     # Componente de encabezado de sección
+│   └── shared/                  # Componentes compartidos
 ├── views/
-│   └── Dashboard.vue            # Vista principal refactorizada
+│   ├── Analytics.vue            # Vista del dashboard de análisis
+│   └── Dashboard.vue            # Vista principal del dashboard
 ├── stores/
-│   └── stockStore.js            # Store de Pinia para datos
-└── tests/
-    ├── components/              # Tests de componentes
-    ├── views/                   # Tests de vistas
-    └── setup.js                 # Configuración de tests
+│   ├── analytics.ts             # Store de datos de análisis
+│   ├── stockStore.ts            # Gestión de datos de acciones
+│   └── stockStoreDetail.ts      # Información detallada de acciones
+├── router/
+│   └── index.ts                 # Configuración de enrutamiento
+├── services/
+│   └── api.ts                   # Comunicación con API
+├── types/
+│   └── index.ts                 # Definiciones de tipos
+├── assets/                      # Assets estáticos y estilos
+├── App.vue                      # Componente raíz
+├── main.ts                      # Punto de entrada
+└── style.css                    # Estilos globales
 ```
 
-## 🛠️ Instalación
+## 🛠️ Instalación y Desarrollo
 
 ```bash
 # Instalar dependencias
 npm install
 
-# Modo desarrollo
+# Iniciar servidor de desarrollo
 npm run dev
 
 # Build para producción
 npm run build
+
+# Preview del build
+npm run preview
 ```
 
-## 🧪 Testing
+## 📊 Componentes Principales
 
-```bash
-# Ejecutar todos los tests
-npm run test
+### CardMetric
+Componente reutilizable para mostrar indicadores clave de rendimiento y métricas con estilos personalizables.
 
-# Ejecutar tests en modo watch
-npm run test:watch
+### CardStock
+Tarjeta de información individual de acciones que muestra ticker, nombre de empresa, score, precio objetivo y rating.
 
-# Ejecutar tests una sola vez
-npm run test:run
+### SectionSubHeader
+Componente de encabezado consistente usado en diferentes secciones de la aplicación.
 
-# Ejecutar tests con interfaz gráfica
-npm run test:ui
+## 🗄️ Vistas Implementadas
 
-# Ejecutar tests con coverage
-npm run test:coverage
-```
+### Dashboard
+Vista principal de la aplicación que incluye:
+- Recomendaciones destacadas
+- Grid de mejores acciones
+- Métricas en tiempo real
+- Filtrado interactivo
 
-## 📊 Componentes
+### Analytics
+Dashboard de análisis comprensivo con:
+- Capacidades de filtrado avanzado
+- Vistas específicas por brokerage
+- Visualización de métricas
+- Análisis de datos históricos
 
-### HeroSection
-Sección principal del dashboard con título, subtítulo, botones de acción y recomendación destacada.
+## 🎨 Sistema de Diseño
 
-### FeaturedRecommendation
-Muestra la recomendación principal con métricas clave como score AI, precio objetivo y nivel de confianza.
-
-### MetricCard
-Componente reutilizable para mostrar métricas con valor, etiqueta y color personalizable.
-
-### TopStocks
-Lista las mejores acciones en formato de grid con tarjetas individuales.
-
-### StockCard
-Tarjeta individual que muestra información de una acción: ticker, empresa, score, precio objetivo y rating.
-
-### RatingBadge
-Badge que muestra la calificación (BUY, HOLD, SELL) con colores apropiados.
-
-### AnalyticsSection
-Sección de análisis con métricas del mercado y botones de acción.
-
-## 🎨 Diseño
-
-- **Paleta de colores**: Gradientes de azul y índigo para un look profesional
+- **Paleta de Colores**: Gradientes profesionales de azul e índigo
 - **Tipografía**: Sistema de fuentes nativo optimizado
-- **Espaciado**: Sistema consistente basado en Tailwind CSS
-- **Animaciones**: Transiciones suaves para mejor UX
+- **Espaciado**: Sistema consistente de Tailwind CSS
+- **Animaciones**: Transiciones suaves para UX mejorada
+- **Responsive**: Diseño mobile-first
 
-## 🔧 Tecnologías
+## 🔧 Gestión de Estado
 
-- **Vue 3**: Framework principal con Composition API
-- **Tailwind CSS**: Framework de CSS utilitario
-- **Pinia**: Gestión de estado
-- **Vue Router**: Enrutamiento
-- **Vitest**: Framework de testing
-- **Vue Test Utils**: Utilidades para testing de componentes Vue
+### Analytics Store
+- Gestión de datos de análisis y filtros
+- Manejo de estados de carga y errores
+- Filtros reactivos por brokerage
 
-## 📈 Mejoras Implementadas
+### Stock Store
+- Gestión central de datos de acciones
+- Integración con API para datos en tiempo real
+- Caching y optimización de rendimiento
 
-1. **Separación de responsabilidades**: Cada componente tiene una función específica
-2. **Reutilización**: Componentes como MetricCard y RatingBadge son altamente reutilizables
-3. **Mantenibilidad**: Código más limpio y fácil de mantener
-4. **Testing**: Cobertura completa de tests unitarios
-5. **Performance**: Componentes optimizados para renderizado eficiente
+### Stock Detail Store
+- Gestión de información detallada de acciones
+- Datos de análisis individual
 
-## 🚀 Próximos Pasos
+## 📈 Características de Rendimiento
 
-- [ ] Implementar lazy loading para componentes
-- [ ] Añadir animaciones más avanzadas
-- [ ] Implementar modo oscuro
-- [ ] Añadir tests de integración
-- [ ] Optimizar para PWA
+- Optimización de Componentes con Vue 3 Composition API
+- Code Splitting basado en rutas
+- Optimización de Assets con Vite
+- Cobertura completa de testing
 
 ## 📝 Licencia
 
