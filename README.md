@@ -119,12 +119,6 @@ Dashboard de análisis comprensivo con:
 - Gestión de información detallada de acciones
 - Datos de análisis individual
 
-## 📈 Características de Rendimiento
-
-- Optimización de Componentes con Vue 3 Composition API
-- Code Splitting basado en rutas
-- Optimización de Assets con Vite
-- Cobertura completa de testing
 
 ## 📝 Licencia
 
