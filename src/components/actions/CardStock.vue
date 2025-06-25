@@ -100,7 +100,7 @@
 
   
     <!-- Action Button -->
-    <router-link
+    <!-- <router-link
       to="/stocks"
       class="block mt-8
        bg-gray-900 text-white 
@@ -109,7 +109,7 @@
        transition-colors duration-200"
     >
       Agregar a waitlist
-    </router-link>
+    </router-link> -->
   </div>
 </template>
 
