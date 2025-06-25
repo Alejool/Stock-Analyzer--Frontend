@@ -688,7 +688,7 @@ const filters = reactive({
   brokerage: "",
   action: "",
   scoreRange: "",
-  dateFrom: new Date(new Date().setDate(new Date().getDate()))
+  dateFrom: new Date(new Date().setDate(new Date().getDate()-1))
     .toISOString()
     .split("T")[0],
   dateTo: "",
@@ -828,7 +828,7 @@ const brokerageAnalysis = computed(() => {
       name,
       count: items.length,
       avgScore:
-        items.reduce((sum: number, item: Stock) => sum + item.score, 0) /
+        items.reduce((sum: number, item: Stock) => sum + (item.score ?? 0), 0) /
         items.length,
       avgTargetChange:
         items.reduce(
@@ -837,7 +837,7 @@ const brokerageAnalysis = computed(() => {
         ) / items.length,
       avgConfidence:
         items.reduce(
-          (sum: number, item: Stock) => sum + item.confidence,
+          (sum: number, item: Stock) => sum + (item.confidence ?? 0),
           0
         ) / items.length,
     }))
